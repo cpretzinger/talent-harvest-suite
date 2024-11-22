@@ -105,7 +105,6 @@ const Leads = () => {
         </Table>
       </div>
     </div>
-  </div>
   );
 };
 
