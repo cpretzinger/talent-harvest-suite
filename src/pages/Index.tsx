@@ -31,7 +31,7 @@ const Index = () => {
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-down text-primary">
               Get Sales Killers
-              <span className="text-secondary"> The Easy Way</span>
+              <span className="text-secondary"> Fast</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-12 animate-fade-up delay-200">
               One Bad Hire Costs Even More Than Their Annual Base
