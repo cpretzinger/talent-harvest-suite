@@ -11,6 +11,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Loader2, UserPlus } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 interface Lead {
   id: string;
@@ -28,6 +31,14 @@ interface Lead {
 
 const Leads = () => {
   const { toast } = useToast();
+  const { user, profile, isLoading: authLoading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authLoading && (!user || !profile || !["administrator", "recruiter"].includes(profile.role))) {
+      navigate("/unauthorized");
+    }
+  }, [user, profile, authLoading, navigate]);
 
   const { data: leads, isLoading } = useQuery({
     queryKey: ["leads"],
@@ -48,14 +59,19 @@ const Leads = () => {
 
       return data as Lead[];
     },
+    enabled: !!user && !!profile && ["administrator", "recruiter"].includes(profile.role),
   });
 
-  if (isLoading) {
+  if (authLoading || isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
+  }
+
+  if (!user || !profile || !["administrator", "recruiter"].includes(profile.role)) {
+    return null;
   }
 
   return (
