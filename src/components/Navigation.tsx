@@ -21,8 +21,8 @@ const Navigation = () => {
     >
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between">
-          <a href="/" className="text-2xl font-semibold hover-lift">
-            Brand
+          <a href="/" className="text-2xl font-semibold hover-lift text-primary">
+            Elite Producer Hires
           </a>
 
           {/* Desktop Navigation */}

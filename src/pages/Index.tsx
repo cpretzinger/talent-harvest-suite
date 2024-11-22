@@ -2,12 +2,7 @@ import { useEffect } from "react";
 import Navigation from "../components/Navigation";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-);
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
   const { toast } = useToast();
@@ -35,11 +30,11 @@ const Index = () => {
         <div className="container mx-auto px-6 py-32 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-down text-primary">
-              Elite Producer
-              <span className="text-secondary"> Hires</span>
+              Get Sales Killers
+              <span className="text-secondary"> The Easy Way</span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-12 animate-fade-up delay-200">
-              Transform your insurance sales team with top talent
+              One Bad Hire Costs Even More Than Their Annual Base
             </p>
             <Button 
               onClick={handleLogin}
