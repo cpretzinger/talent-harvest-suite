@@ -23,11 +23,13 @@ const formSchema = z.object({
   source: z.string().optional(),
 });
 
+type FormValues = z.infer<typeof formSchema>;
+
 export function LeadForm() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       first_name: "",
@@ -38,9 +40,17 @@ export function LeadForm() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: FormValues) {
     try {
-      const { error } = await supabase.from("leads").insert([values]);
+      const { error } = await supabase.from("leads").insert({
+        first_name: values.first_name,
+        last_name: values.last_name,
+        email: values.email,
+        phone: values.phone || null,
+        source: values.source || null,
+        status: 'new',
+        pipeline_stage: 'new',
+      });
       
       if (error) throw error;
 
