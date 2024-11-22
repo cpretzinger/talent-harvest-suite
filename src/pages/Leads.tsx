@@ -3,8 +3,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2, Plus } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { LeadForm } from "@/components/leads/LeadForm";
 import { LeadPipeline } from "@/components/leads/LeadPipeline";
@@ -33,8 +31,6 @@ interface Lead {
 
 const Leads = () => {
   const { toast } = useToast();
-  const { user, profile, isLoading: authLoading } = useAuth();
-  const navigate = useNavigate();
   const [isFormOpen, setIsFormOpen] = useState(false);
 
   const { data: leads, isLoading: leadsLoading } = useQuery({
@@ -56,22 +52,14 @@ const Leads = () => {
 
       return data as Lead[];
     },
-    enabled: !!user && !!profile && ["administrator", "recruiter"].includes(profile.role),
   });
 
-  // Handle loading states
-  if (authLoading || leadsLoading) {
+  if (leadsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
-  }
-
-  // Handle unauthorized access
-  if (!user || !profile || !["administrator", "recruiter"].includes(profile.role)) {
-    navigate("/unauthorized");
-    return null;
   }
 
   return (
