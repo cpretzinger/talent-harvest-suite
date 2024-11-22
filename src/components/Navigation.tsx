@@ -31,7 +31,7 @@ const Navigation = () => {
               <a
                 key={item}
                 href={`#${item.toLowerCase()}`}
-                className="text-2xl font-semibold text-cream/90 hover:text-cream transition-colors hover-lift"
+                className="text-lg font-semibold text-cream/90 hover:text-cream transition-colors hover-lift"
               >
                 {item}
               </a>
@@ -56,7 +56,7 @@ const Navigation = () => {
                 <a
                   key={item}
                   href={`#${item.toLowerCase()}`}
-                  className="text-2xl font-semibold text-cream/90 hover:text-cream transition-colors hover-lift"
+                  className="text-lg font-semibold text-cream/90 hover:text-cream transition-colors hover-lift"
                   onClick={() => setIsOpen(false)}
                 >
                   {item}
