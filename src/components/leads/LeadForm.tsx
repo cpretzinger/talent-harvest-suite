@@ -52,15 +52,15 @@ export function LeadForm() {
         email: values.email,
         phone: values.phone || null,
         source: values.source || null,
-        status: 'new',
-        pipeline_stage: 'new',
+        status: "new",
+        pipeline_stage: "new",
       });
       
       if (error) throw error;
 
       toast({
-        title: "Lead created successfully",
-        description: "The new lead has been added to the system.",
+        title: "Candidate created successfully",
+        description: "The new candidate has been added to the system.",
       });
 
       form.reset();
@@ -68,8 +68,8 @@ export function LeadForm() {
     } catch (error) {
       toast({
         variant: "destructive",
-        title: "Error creating lead",
-        description: "There was an error creating the lead. Please try again.",
+        title: "Error creating candidate",
+        description: "There was an error creating the candidate. Please try again.",
       });
     } finally {
       setIsSubmitting(false);

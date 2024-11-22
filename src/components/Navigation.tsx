@@ -16,12 +16,12 @@ const Navigation = () => {
   return (
     <nav
       className={`fixed w-full z-50 transition-all duration-300 ${
-        isScrolled ? "glass-morphism py-4" : "py-6"
+        isScrolled ? "bg-primary/90 backdrop-blur-md shadow-lg py-4" : "bg-primary/70 py-6"
       }`}
     >
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between">
-          <a href="/" className="text-2xl font-semibold hover-lift text-primary">
+          <a href="/" className="text-2xl font-semibold hover-lift text-cream">
             Elite Producer Hires
           </a>
 
@@ -31,7 +31,7 @@ const Navigation = () => {
               <a
                 key={item}
                 href={`#${item.toLowerCase()}`}
-                className="text-sm font-medium hover-lift"
+                className="text-sm font-medium text-cream/90 hover:text-cream transition-colors hover-lift"
               >
                 {item}
               </a>
@@ -40,7 +40,7 @@ const Navigation = () => {
 
           {/* Mobile Navigation */}
           <button
-            className="md:hidden"
+            className="md:hidden text-cream"
             onClick={() => setIsOpen(!isOpen)}
             aria-label="Toggle menu"
           >
@@ -50,13 +50,13 @@ const Navigation = () => {
 
         {/* Mobile Menu */}
         {isOpen && (
-          <div className="md:hidden absolute top-full left-0 w-full glass-morphism mt-2 py-4">
+          <div className="md:hidden absolute top-full left-0 w-full bg-primary/95 backdrop-blur-md mt-2 py-4">
             <div className="flex flex-col items-center space-y-4">
               {["Products", "Features", "About", "Contact"].map((item) => (
                 <a
                   key={item}
                   href={`#${item.toLowerCase()}`}
-                  className="text-sm font-medium hover-lift"
+                  className="text-sm font-medium text-cream/90 hover:text-cream transition-colors hover-lift"
                   onClick={() => setIsOpen(false)}
                 >
                   {item}

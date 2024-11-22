@@ -46,7 +46,7 @@ const Leads = () => {
       if (error) {
         toast({
           variant: "destructive",
-          title: "Error fetching leads",
+          title: "Error fetching candidates",
           description: error.message,
         });
         throw error;
@@ -68,9 +68,9 @@ const Leads = () => {
     <div className="container mx-auto py-10 px-4">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-primary">Lead Pipeline</h1>
+          <h1 className="text-3xl font-bold text-primary">Candidate Pipeline</h1>
           <p className="text-muted-foreground mt-1">
-            Manage and track your sales pipeline
+            Manage and track your recruitment pipeline
           </p>
         </div>
         <div className="flex gap-2">
@@ -79,6 +79,7 @@ const Leads = () => {
               variant={viewMode === "pipeline" ? "default" : "ghost"}
               size="sm"
               onClick={() => setViewMode("pipeline")}
+              className="hover:-translate-y-0.5 transition-transform"
             >
               <LayoutGrid className="h-4 w-4" />
             </Button>
@@ -86,20 +87,21 @@ const Leads = () => {
               variant={viewMode === "list" ? "default" : "ghost"}
               size="sm"
               onClick={() => setViewMode("list")}
+              className="hover:-translate-y-0.5 transition-transform"
             >
               <List className="h-4 w-4" />
             </Button>
           </div>
           <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
             <DialogTrigger asChild>
-              <Button>
+              <Button className="hover:-translate-y-0.5 transition-transform">
                 <Plus className="mr-2 h-4 w-4" />
-                Add New Lead
+                Add New Candidate
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Add New Lead</DialogTitle>
+                <DialogTitle>Add New Candidate</DialogTitle>
               </DialogHeader>
               <LeadForm />
             </DialogContent>

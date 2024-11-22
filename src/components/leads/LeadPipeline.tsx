@@ -27,7 +27,7 @@ export function LeadPipeline({ leads }: { leads: Lead[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
       {pipelineStages.map((stage) => (
-        <Card key={stage.name} className="bg-white shadow-sm">
+        <Card key={stage.name} className="bg-white shadow-sm hover:shadow-md transition-shadow">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">
               {stage.name}
@@ -40,7 +40,10 @@ export function LeadPipeline({ leads }: { leads: Lead[] }) {
             {leads
               .filter((lead) => lead.pipeline_stage === stage.name.toLowerCase())
               .map((lead) => (
-                <Card key={lead.id} className="p-2 hover:bg-gray-50 cursor-pointer">
+                <Card 
+                  key={lead.id} 
+                  className="p-2 hover:bg-gray-50 cursor-pointer transition-colors hover:-translate-y-0.5 duration-200"
+                >
                   <CardTitle className="text-sm">
                     {lead.first_name} {lead.last_name}
                   </CardTitle>

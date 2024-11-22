@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Search, MoreHorizontal } from "lucide-react";
+import { Search, MoreHorizontal, FileText, MessageSquare, ListTodo } from "lucide-react";
 import { LeadDetailsModal } from "./LeadDetailsModal";
 
 interface Lead {
@@ -27,6 +27,9 @@ interface Lead {
   status: string;
   source: string | null;
   pipeline_stage: string;
+  notes?: string[];
+  communication_history?: any[];
+  tasks?: any[];
 }
 
 export function LeadList({ leads }: { leads: Lead[] }) {
@@ -46,7 +49,7 @@ export function LeadList({ leads }: { leads: Lead[] }) {
         <div className="relative flex-1">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search leads..."
+            placeholder="Search candidates..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-8"
@@ -68,7 +71,11 @@ export function LeadList({ leads }: { leads: Lead[] }) {
           </TableHeader>
           <TableBody>
             {filteredLeads.map((lead) => (
-              <TableRow key={lead.id}>
+              <TableRow 
+                key={lead.id}
+                className="transition-colors hover:bg-muted/50 cursor-pointer"
+                onClick={() => setSelectedLead(lead)}
+              >
                 <TableCell>
                   {lead.first_name} {lead.last_name}
                 </TableCell>
@@ -78,14 +85,20 @@ export function LeadList({ leads }: { leads: Lead[] }) {
                 <TableCell className="capitalize">{lead.status}</TableCell>
                 <TableCell>
                   <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="h-8 w-8 p-0">
+                    <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                      <Button variant="ghost" className="h-8 w-8 p-0 hover:bg-muted">
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => setSelectedLead(lead)}>
-                        View Details
+                      <DropdownMenuItem>
+                        <FileText className="mr-2 h-4 w-4" /> Documents
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <MessageSquare className="mr-2 h-4 w-4" /> Communication
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <ListTodo className="mr-2 h-4 w-4" /> Tasks
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
