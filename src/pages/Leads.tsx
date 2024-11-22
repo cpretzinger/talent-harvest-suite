@@ -2,18 +2,19 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Loader2, UserPlus } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { LeadForm } from "@/components/leads/LeadForm";
+import { LeadPipeline } from "@/components/leads/LeadPipeline";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface Lead {
   id: string;
@@ -27,12 +28,14 @@ interface Lead {
   assigned_to: string | null;
   assessment_score: number | null;
   placement_status: string | null;
+  pipeline_stage: string;
 }
 
 const Leads = () => {
   const { toast } = useToast();
   const { user, profile, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   useEffect(() => {
     if (!authLoading && (!user || !profile || !["administrator", "recruiter"].includes(profile.role))) {
@@ -75,50 +78,32 @@ const Leads = () => {
   }
 
   return (
-    <div className="container mx-auto py-10">
+    <div className="container mx-auto py-10 px-4">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-primary">Leads Management</h1>
-        <Button>
-          <UserPlus className="mr-2 h-4 w-4" />
-          Add New Lead
-        </Button>
+        <div>
+          <h1 className="text-3xl font-bold text-primary">Lead Pipeline</h1>
+          <p className="text-muted-foreground mt-1">
+            Manage and track your sales pipeline
+          </p>
+        </div>
+        <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+          <DialogTrigger asChild>
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Add New Lead
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Lead</DialogTitle>
+            </DialogHeader>
+            <LeadForm />
+          </DialogContent>
+        </Dialog>
       </div>
 
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Source</TableHead>
-              <TableHead>Created</TableHead>
-              <TableHead>Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {leads?.map((lead) => (
-              <TableRow key={lead.id}>
-                <TableCell>
-                  {lead.first_name} {lead.last_name}
-                </TableCell>
-                <TableCell>{lead.email}</TableCell>
-                <TableCell>
-                  <span className="capitalize">{lead.status}</span>
-                </TableCell>
-                <TableCell>{lead.source || "-"}</TableCell>
-                <TableCell>
-                  {new Date(lead.created_at).toLocaleDateString()}
-                </TableCell>
-                <TableCell>
-                  <Button variant="outline" size="sm">
-                    View Details
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+      <div className="space-y-8">
+        {leads && <LeadPipeline leads={leads} />}
       </div>
     </div>
   );

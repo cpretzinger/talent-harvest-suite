@@ -9,50 +9,110 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      documents: {
+        Row: {
+          created_at: string | null
+          file_name: string
+          file_path: string
+          file_type: string | null
+          id: string
+          lead_id: string | null
+          updated_at: string | null
+          uploaded_by: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          file_name: string
+          file_path: string
+          file_type?: string | null
+          id?: string
+          lead_id?: string | null
+          updated_at?: string | null
+          uploaded_by?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          file_name?: string
+          file_path?: string
+          file_type?: string | null
+          id?: string
+          lead_id?: string | null
+          updated_at?: string | null
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_uploaded_by_fkey"
+            columns: ["uploaded_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leads: {
         Row: {
           assessment_score: number | null
           assigned_to: string | null
+          communication_history: Json[] | null
           created_at: string | null
           email: string
           first_name: string
+          follow_ups: Json[] | null
           id: string
           last_name: string
           notes: string[] | null
           phone: string | null
+          pipeline_stage: string | null
           placement_status: string | null
           source: string | null
           status: string
+          tasks: Json[] | null
           updated_at: string | null
         }
         Insert: {
           assessment_score?: number | null
           assigned_to?: string | null
+          communication_history?: Json[] | null
           created_at?: string | null
           email: string
           first_name: string
+          follow_ups?: Json[] | null
           id?: string
           last_name: string
           notes?: string[] | null
           phone?: string | null
+          pipeline_stage?: string | null
           placement_status?: string | null
           source?: string | null
           status?: string
+          tasks?: Json[] | null
           updated_at?: string | null
         }
         Update: {
           assessment_score?: number | null
           assigned_to?: string | null
+          communication_history?: Json[] | null
           created_at?: string | null
           email?: string
           first_name?: string
+          follow_ups?: Json[] | null
           id?: string
           last_name?: string
           notes?: string[] | null
           phone?: string | null
+          pipeline_stage?: string | null
           placement_status?: string | null
           source?: string | null
           status?: string
+          tasks?: Json[] | null
           updated_at?: string | null
         }
         Relationships: [
