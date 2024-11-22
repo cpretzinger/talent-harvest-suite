@@ -16,18 +16,16 @@ export const ProtectedRoute = ({
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isLoading && !user) {
-      navigate("/login");
-      return;
-    }
+    if (!isLoading) {
+      if (!user) {
+        navigate("/login");
+        return;
+      }
 
-    if (
-      !isLoading &&
-      profile &&
-      allowedRoles &&
-      !allowedRoles.includes(profile.role)
-    ) {
-      navigate("/unauthorized");
+      if (profile && allowedRoles && !allowedRoles.includes(profile.role)) {
+        navigate("/unauthorized");
+        return;
+      }
     }
   }, [user, profile, isLoading, navigate, allowedRoles]);
 
