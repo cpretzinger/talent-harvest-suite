@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 const painPoints = [
   "One Bad Hire Costs Even More Than Their Annual Base",
   "80% of Sales Team Turnover Happens in the First 90 Days",
-  "The Average Cost of a Bad Sales Hire is $250,000",
+  "The Average Cost of a Bad Sales Hire is $50,000+",
   "It Takes 6+ Months to Replace an Underperforming Sales Rep",
   "Poor Hiring Decisions Account for 40% of Sales Team Failures"
 ];
