@@ -3,6 +3,7 @@ import Navigation from "../components/Navigation";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import RotatingSubheadline from "@/components/RotatingSubheadline";
 
 const Index = () => {
   const { toast } = useToast();
@@ -33,9 +34,7 @@ const Index = () => {
               Get Sales Killers
               <span className="text-secondary"> Fast</span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-600 mb-12 animate-fade-up delay-200">
-              One Bad Hire Costs Even More Than Their Annual Base
-            </p>
+            <RotatingSubheadline />
             <Button 
               onClick={handleLogin}
               className="px-8 py-6 rounded-full text-lg hover-lift animate-fade-up delay-300"
