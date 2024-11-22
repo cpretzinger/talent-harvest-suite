@@ -2,10 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, Plus } from "lucide-react";
+import { Loader2, Plus, LayoutGrid, List } from "lucide-react";
 import { useState } from "react";
 import { LeadForm } from "@/components/leads/LeadForm";
 import { LeadPipeline } from "@/components/leads/LeadPipeline";
+import { LeadList } from "@/components/leads/LeadList";
 import {
   Dialog,
   DialogContent,
@@ -32,6 +33,7 @@ interface Lead {
 const Leads = () => {
   const { toast } = useToast();
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<"pipeline" | "list">("pipeline");
 
   const { data: leads, isLoading: leadsLoading } = useQuery({
     queryKey: ["leads"],
@@ -71,24 +73,43 @@ const Leads = () => {
             Manage and track your sales pipeline
           </p>
         </div>
-        <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Add New Lead
+        <div className="flex gap-2">
+          <div className="border rounded-md p-1">
+            <Button
+              variant={viewMode === "pipeline" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("pipeline")}
+            >
+              <LayoutGrid className="h-4 w-4" />
             </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Add New Lead</DialogTitle>
-            </DialogHeader>
-            <LeadForm />
-          </DialogContent>
-        </Dialog>
+            <Button
+              variant={viewMode === "list" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setViewMode("list")}
+            >
+              <List className="h-4 w-4" />
+            </Button>
+          </div>
+          <Dialog open={isFormOpen} onOpenChange={setIsFormOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Add New Lead
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Add New Lead</DialogTitle>
+              </DialogHeader>
+              <LeadForm />
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       <div className="space-y-8">
-        {leads && <LeadPipeline leads={leads} />}
+        {leads && viewMode === "pipeline" && <LeadPipeline leads={leads} />}
+        {leads && viewMode === "list" && <LeadList leads={leads} />}
       </div>
     </div>
   );
