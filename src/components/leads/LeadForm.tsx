@@ -14,6 +14,8 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   first_name: z.string().min(2, "First name must be at least 2 characters"),
@@ -28,6 +30,7 @@ type FormValues = z.infer<typeof formSchema>;
 export function LeadForm() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -42,6 +45,7 @@ export function LeadForm() {
 
   async function onSubmit(values: FormValues) {
     try {
+      setIsSubmitting(true);
       const { error } = await supabase.from("leads").insert({
         first_name: values.first_name,
         last_name: values.last_name,
@@ -67,6 +71,8 @@ export function LeadForm() {
         title: "Error creating lead",
         description: "There was an error creating the lead. Please try again.",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -81,7 +87,7 @@ export function LeadForm() {
               <FormItem>
                 <FormLabel>First Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="John" {...field} />
+                  <Input placeholder="John" {...field} disabled={isSubmitting} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -94,7 +100,7 @@ export function LeadForm() {
               <FormItem>
                 <FormLabel>Last Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Doe" {...field} />
+                  <Input placeholder="Doe" {...field} disabled={isSubmitting} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -108,7 +114,12 @@ export function LeadForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input type="email" placeholder="john@example.com" {...field} />
+                <Input 
+                  type="email" 
+                  placeholder="john@example.com" 
+                  {...field} 
+                  disabled={isSubmitting}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -121,7 +132,11 @@ export function LeadForm() {
             <FormItem>
               <FormLabel>Phone</FormLabel>
               <FormControl>
-                <Input placeholder="+1 (555) 000-0000" {...field} />
+                <Input 
+                  placeholder="+1 (555) 000-0000" 
+                  {...field} 
+                  disabled={isSubmitting}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -134,13 +149,26 @@ export function LeadForm() {
             <FormItem>
               <FormLabel>Source</FormLabel>
               <FormControl>
-                <Input placeholder="Website, Referral, etc." {...field} />
+                <Input 
+                  placeholder="Website, Referral, etc." 
+                  {...field} 
+                  disabled={isSubmitting}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">Create Lead</Button>
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Creating Lead...
+            </>
+          ) : (
+            'Create Lead'
+          )}
+        </Button>
       </form>
     </Form>
   );
