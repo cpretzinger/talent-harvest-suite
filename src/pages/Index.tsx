@@ -2,9 +2,18 @@ import Navigation from "../components/Navigation";
 import RotatingSubheadline from "@/components/RotatingSubheadline";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
+import { Loader2 } from "lucide-react";
 
 const Index = () => {
-  const { profile, signOut } = useAuth();
+  const { profile, signOut, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-cream">

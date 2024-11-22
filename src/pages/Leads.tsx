@@ -5,7 +5,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Loader2, Plus } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { LeadForm } from "@/components/leads/LeadForm";
 import { LeadPipeline } from "@/components/leads/LeadPipeline";
 import {
@@ -37,13 +37,7 @@ const Leads = () => {
   const navigate = useNavigate();
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  useEffect(() => {
-    if (!authLoading && (!user || !profile || !["administrator", "recruiter"].includes(profile.role))) {
-      navigate("/unauthorized");
-    }
-  }, [user, profile, authLoading, navigate]);
-
-  const { data: leads, isLoading } = useQuery({
+  const { data: leads, isLoading: leadsLoading } = useQuery({
     queryKey: ["leads"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -65,15 +59,18 @@ const Leads = () => {
     enabled: !!user && !!profile && ["administrator", "recruiter"].includes(profile.role),
   });
 
-  if (authLoading || isLoading) {
+  // Handle loading states
+  if (authLoading || leadsLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
 
+  // Handle unauthorized access
   if (!user || !profile || !["administrator", "recruiter"].includes(profile.role)) {
+    navigate("/unauthorized");
     return null;
   }
 
