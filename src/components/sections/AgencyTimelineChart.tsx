@@ -13,13 +13,8 @@ const data = [
 export const AgencyTimelineChart = () => {
   return (
     <div className="w-full h-[400px] flex flex-col">
-      <div className="w-full h-full">
-        <LineChart 
-          width={350} 
-          height={350} 
-          data={data} 
-          margin={{ top: 20, right: 80, left: 40, bottom: 20 }}
-        >
+      <ResponsiveContainer width="100%" height="100%">
+        <LineChart data={data} margin={{ top: 20, right: 80, left: 40, bottom: 20 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#26361C" strokeWidth={1.5} className="opacity-80" />
           <XAxis 
             dataKey="year" 
@@ -89,7 +84,6 @@ export const AgencyTimelineChart = () => {
             }}
             labelStyle={{ color: '#FEFAE2', fontWeight: 600 }}
             itemStyle={{ color: '#FEFAE2' }}
-            active={false}
           />
           <Line 
             yAxisId="left"
@@ -97,8 +91,7 @@ export const AgencyTimelineChart = () => {
             dataKey="redLine" 
             stroke="#EF4444" 
             strokeWidth={3} 
-            dot={false}
-            activeDot={false}
+            dot={false} 
           />
           <Line 
             yAxisId="right"
@@ -106,11 +99,10 @@ export const AgencyTimelineChart = () => {
             dataKey="greenLine" 
             stroke="#22C55E" 
             strokeWidth={3} 
-            dot={false}
-            activeDot={false}
+            dot={false} 
           />
         </LineChart>
-      </div>
+      </ResponsiveContainer>
       <p className="text-center mt-6 text-lg font-semibold bg-gradient-to-r from-primary/90 to-secondary/90 bg-clip-text text-transparent drop-shadow-sm">
         We Were On Our Way To Sick And Broke
       </p>
