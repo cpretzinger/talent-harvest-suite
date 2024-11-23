@@ -59,6 +59,51 @@ export type Database = {
           },
         ]
       }
+      assessment_progress: {
+        Row: {
+          answers: Json
+          assessment_id: string
+          current_question: number
+          current_section: string
+          id: string
+          last_updated: string | null
+          user_id: string
+        }
+        Insert: {
+          answers?: Json
+          assessment_id: string
+          current_question?: number
+          current_section?: string
+          id?: string
+          last_updated?: string | null
+          user_id: string
+        }
+        Update: {
+          answers?: Json
+          assessment_id?: string
+          current_question?: number
+          current_section?: string
+          id?: string
+          last_updated?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessment_progress_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assessment_progress_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assessment_results: {
         Row: {
           assessment_id: string
