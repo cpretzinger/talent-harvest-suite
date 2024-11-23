@@ -429,6 +429,41 @@ export type Database = {
         }
         Relationships: []
       }
+      producer_ai_analysis: {
+        Row: {
+          analysis_result: Json
+          analysis_type: string
+          confidence_score: number
+          created_at: string | null
+          id: string
+          producer_id: string
+        }
+        Insert: {
+          analysis_result: Json
+          analysis_type: string
+          confidence_score: number
+          created_at?: string | null
+          id?: string
+          producer_id: string
+        }
+        Update: {
+          analysis_result?: Json
+          analysis_type?: string
+          confidence_score?: number
+          created_at?: string | null
+          id?: string
+          producer_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "producer_ai_analysis_producer_id_fkey"
+            columns: ["producer_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
