@@ -120,7 +120,7 @@ const Index = () => {
               <h3 className="text-2xl font-bold mb-6 text-primary">Agency Timeline</h3>
               <AgencyTimelineChart />
               <p className="text-lg text-primary/80 italic mt-6">
-                We were on the red line, desperately hoping something would shift.
+                We had to switch paths or be doomed!
               </p>
             </div>
 
