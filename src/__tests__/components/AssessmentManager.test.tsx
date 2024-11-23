@@ -11,7 +11,7 @@ vi.mock('@/contexts/AuthContext', () => ({
   useAuth: vi.fn()
 }));
 
-// Mock Supabase client
+// Mock Supabase client with complete PostgrestQueryBuilder properties
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
     from: vi.fn(() => ({
@@ -21,10 +21,18 @@ vi.mock('@/integrations/supabase/client', () => ({
       order: vi.fn().mockReturnThis(),
       url: 'mock-url',
       headers: {},
-      insert: vi.fn(),
-      upsert: vi.fn(),
-      delete: vi.fn(),
-      update: vi.fn()
+      insert: vi.fn().mockReturnThis(),
+      upsert: vi.fn().mockReturnThis(),
+      delete: vi.fn().mockReturnThis(),
+      update: vi.fn().mockReturnThis(),
+      match: vi.fn().mockReturnThis(),
+      filter: vi.fn().mockReturnThis(),
+      range: vi.fn().mockReturnThis(),
+      limit: vi.fn().mockReturnThis(),
+      maybeSingle: vi.fn().mockReturnThis(),
+      csv: vi.fn().mockReturnThis(),
+      then: vi.fn().mockReturnThis(),
+      throwOnError: vi.fn().mockReturnThis()
     }))
   }
 }));
@@ -63,10 +71,18 @@ describe('AssessmentManager', () => {
         statusText: 'Not Found',
         url: 'mock-url',
         headers: {},
-        insert: vi.fn(),
-        upsert: vi.fn(),
-        delete: vi.fn(),
-        update: vi.fn()
+        insert: vi.fn().mockReturnThis(),
+        upsert: vi.fn().mockReturnThis(),
+        delete: vi.fn().mockReturnThis(),
+        update: vi.fn().mockReturnThis(),
+        match: vi.fn().mockReturnThis(),
+        filter: vi.fn().mockReturnThis(),
+        range: vi.fn().mockReturnThis(),
+        limit: vi.fn().mockReturnThis(),
+        maybeSingle: vi.fn().mockReturnThis(),
+        csv: vi.fn().mockReturnThis(),
+        then: vi.fn().mockReturnThis(),
+        throwOnError: vi.fn().mockReturnThis()
       } as PostgrestSingleResponse<any>)
     };
 
