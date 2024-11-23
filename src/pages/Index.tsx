@@ -12,7 +12,14 @@ const Index = () => {
             <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-down">
               <span className="inline-block">Get </span>
               <span className="bg-gradient-to-r from-primary via-secondary to-cream bg-clip-text text-transparent relative">
-                <span className="absolute -left-[1px] top-0 bg-gradient-to-b from-[#26361C] to-[#AB760F] bg-clip-text text-transparent" style={{ WebkitTextStroke: '1px' }}>
+                <span 
+                  className="absolute -left-[0.5px] top-0 bg-gradient-to-r from-primary to-secondary opacity-90" 
+                  style={{ 
+                    WebkitTextStroke: '0.3px',
+                    clipPath: 'inset(0 99% 0 0)',
+                    color: 'transparent'
+                  }}
+                >
                   Sales Killers Fast
                 </span>
                 Sales Killers Fast
