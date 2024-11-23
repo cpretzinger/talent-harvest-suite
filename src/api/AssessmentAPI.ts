@@ -45,8 +45,8 @@ export class AssessmentAPI {
         user_id: userId,
         assessment_id: assessmentId,
         scores: results.scores,
-        dimensional_balance: results.dimensionalBalance,
-        overall_profile: results.overallProfile
+        dimensional_balance: results.dimensional_balance,
+        overall_profile: results.overall_profile
       });
 
     if (resultsError) throw resultsError;
@@ -82,7 +82,7 @@ export class AssessmentAPI {
       }
     });
 
-    const dimensionalBalance = {
+    const dimensional_balance = {
       external: {
         empathy: categoryScores.get('Interactive') || 0,
         practicalThinking: categoryScores.get('Decisive') || 0,
@@ -106,7 +106,7 @@ export class AssessmentAPI {
         level: this.calculateScoreLevel(score),
         insights: this.generateInsights(category, score),
       })),
-      dimensional_balance: dimensionalBalance,
+      dimensional_balance,
       overall_profile: this.generateProfile(categoryScores)
     };
   }
@@ -124,7 +124,7 @@ export class AssessmentAPI {
     return [];
   }
 
-  private generateProfile(scores: Map<string, number>): Profile {
+  private generateProfile(scores: Map<string, number>): Record<string, any> {
     return {
       naturalStyle: { D: 0, I: 0, S: 0, C: 0 },
       adaptiveStyle: { D: 0, I: 0, S: 0, C: 0 },
