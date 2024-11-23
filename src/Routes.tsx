@@ -7,16 +7,18 @@ import ResourcesPage from "@/pages/Resources";
 
 const queryClient = new QueryClient();
 
-export const AppRoutes = () => {
+export const Routes = () => {
   return (
     <Router>
       <AuthProvider>
-        <Routes>
-          <Route path="/assessment/:id" element={<AssessmentPage />} />
-          <Route path="/resources" element={<ResourcesPage />} />
-          <Route path="/resources/category/:categorySlug" element={<ResourcesPage />} />
-        </Routes>
-        <Toaster />
+        <QueryClientProvider client={queryClient}>
+          <Routes>
+            <Route path="/assessment/:id" element={<AssessmentPage />} />
+            <Route path="/resources" element={<ResourcesPage />} />
+            <Route path="/resources/category/:categorySlug" element={<ResourcesPage />} />
+          </Routes>
+          <Toaster />
+        </QueryClientProvider>
       </AuthProvider>
     </Router>
   );
