@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { AssessmentManager } from "@/components/assessment/AssessmentManager";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/assessment/AssessmentStateDisplay";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -47,7 +47,7 @@ export default function AssessmentPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-cream">
         <LoadingSpinner />
       </div>
     );
@@ -55,10 +55,10 @@ export default function AssessmentPage() {
 
   if (!assessment) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h2 className="text-2xl font-semibold mb-2">Assessment Not Found</h2>
-          <p className="text-gray-600">The requested assessment could not be found.</p>
+      <div className="flex items-center justify-center min-h-screen bg-cream">
+        <div className="text-center space-y-4">
+          <h2 className="text-2xl font-semibold text-primary">Assessment Not Found</h2>
+          <p className="text-secondary">The requested assessment could not be found.</p>
         </div>
       </div>
     );
@@ -70,16 +70,26 @@ export default function AssessmentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="container mx-auto px-4">
-        <Card>
-          <CardContent className="p-6">
+    <div className="min-h-screen bg-cream py-8 px-4 sm:px-6 lg:px-8 animate-fade-in">
+      <div className="max-w-4xl mx-auto">
+        <Card className="glass-morphism overflow-hidden border-0 shadow-xl">
+          <div className="p-6 sm:p-8">
+            <header className="mb-8 text-center">
+              <h1 className="text-2xl sm:text-3xl font-bold text-primary mb-2">
+                {assessment.title}
+              </h1>
+              {assessment.description && (
+                <p className="text-secondary/80">
+                  {assessment.description}
+                </p>
+              )}
+            </header>
             <AssessmentManager
               assessmentId={assessmentId!}
               userId={user.id}
               onComplete={handleComplete}
             />
-          </CardContent>
+          </div>
         </Card>
       </div>
     </div>
