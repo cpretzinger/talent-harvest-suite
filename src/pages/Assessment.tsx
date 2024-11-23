@@ -26,11 +26,8 @@ const Assessment = () => {
       
       const { data, error } = await supabase
         .from("assessments")
-        .select(`
-          *,
-          questions (*)
-        `)
-        .eq('id', id)
+        .select("*, questions(*)")
+        .eq("id", id)
         .single();
 
       if (error) throw error;
@@ -153,7 +150,6 @@ const Assessment = () => {
   );
 };
 
-// Helper functions for calculating results
 const calculateScores = (responses: Response[]) => {
   return {};
 };
