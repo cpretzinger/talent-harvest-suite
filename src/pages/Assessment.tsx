@@ -27,8 +27,11 @@ const Assessment = () => {
       
       const { data, error } = await supabase
         .from("assessments")
-        .select("*, questions(*)")
-        .eq("id", id)
+        .select(`
+          *,
+          questions (*)
+        `)
+        .eq('id', id)
         .single();
 
       if (error) {
@@ -143,8 +146,8 @@ const Assessment = () => {
     );
   }
 
-  const currentQuestion = assessment?.questions?.[currentQuestionIndex];
-  const progress = assessment?.questions 
+  const currentQuestion = assessment.questions?.[currentQuestionIndex];
+  const progress = assessment.questions 
     ? ((currentQuestionIndex + 1) / assessment.questions.length) * 100
     : 0;
 
@@ -153,7 +156,7 @@ const Assessment = () => {
       <Card className="max-w-4xl mx-auto">
         <CardHeader>
           <div className="flex justify-between items-center">
-            <CardTitle>{assessment?.title}</CardTitle>
+            <CardTitle>{assessment.title}</CardTitle>
             <div className="text-lg font-semibold">
               Time Remaining: {Math.floor(timeRemaining / 60)}:{String(timeRemaining % 60).padStart(2, "0")}
             </div>
