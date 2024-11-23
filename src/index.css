@@ -46,6 +46,12 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  .draggable-chatbox {
+    transform: translate(0px, 0px);
+    touch-action: none;
+    user-select: none;
+  }
 }
 
 .animate-on-scroll {

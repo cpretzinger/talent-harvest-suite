@@ -80,10 +80,17 @@ export function ChatBox() {
   }
 
   return (
-    <Draggable handle=".drag-handle" bounds="parent">
-      <div className="fixed right-4 bottom-4 w-96 z-50">
+    <Draggable
+      handle=".drag-handle"
+      bounds="parent"
+      defaultPosition={{ x: 0, y: 0 }}
+      grid={[1, 1]}
+      scale={1}
+      defaultClassName="draggable-chatbox"
+    >
+      <div className="fixed right-4 bottom-4 w-96 z-50 transition-transform duration-75">
         <Card className="flex flex-col h-[600px] border-2 shadow-xl">
-          <div className="p-4 border-b bg-primary text-primary-foreground drag-handle cursor-move flex justify-between items-center">
+          <div className="p-4 border-b bg-primary text-primary-foreground drag-handle cursor-move flex justify-between items-center select-none">
             <h2 className="text-lg font-semibold">AI Assistant</h2>
             <Button
               variant="ghost"
