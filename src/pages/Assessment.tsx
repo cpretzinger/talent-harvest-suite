@@ -52,7 +52,17 @@ const Assessment = () => {
         throw error;
       }
       
-      return data;
+      // Transform the data to match Assessment type
+      if (data) {
+        return {
+          ...data,
+          questions: data.questions.map((q: any) => ({
+            ...q,
+            options: q.options as string[] | undefined
+          }))
+        };
+      }
+      return null;
     },
     enabled: Boolean(id),
   });
@@ -110,15 +120,18 @@ const Assessment = () => {
 
       const result = resultsCalculator.generateFullReport(responses);
 
+      // Convert complex types to JSON for storage
+      const resultForStorage = {
+        user_id: mockUserId,
+        assessment_id: id,
+        scores: JSON.stringify(result.scores),
+        dimensional_balance: JSON.stringify(result.dimensional_balance),
+        overall_profile: JSON.stringify(result.overall_profile)
+      };
+
       const { error: resultsError } = await supabase
         .from("assessment_results")
-        .insert([{
-          user_id: mockUserId,
-          assessment_id: id,
-          scores: result.scores,
-          dimensional_balance: result.dimensional_balance,
-          overall_profile: result.overall_profile
-        }]);
+        .insert([resultForStorage]);
 
       if (resultsError) throw resultsError;
 

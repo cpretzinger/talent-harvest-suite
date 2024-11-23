@@ -79,9 +79,9 @@ export class AssessmentScorer {
     return {
       user_id: '',
       assessment_id: '',
-      scores: this.convertToJson(this.formatCategoryScores(discScores.natural)),
-      dimensional_balance: this.convertToJson(dimensionalBalance),
-      overall_profile: this.convertToJson(profile)
+      scores: this.formatCategoryScores(discScores),
+      dimensional_balance: dimensionalBalance,
+      overall_profile: profile
     };
   }
 
