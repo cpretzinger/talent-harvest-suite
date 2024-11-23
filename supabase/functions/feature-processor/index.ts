@@ -3,19 +3,45 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4";
 import * as tf from "https://esm.sh/@tensorflow/tfjs@4.11.0";
 import natural from "https://esm.sh/natural@6.10.0";
 
-// CORS headers for browser access
+// CORS headers
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-interface FeatureProcessorConfig {
-  normalizations: Record<string, { min: number; max: number }>;
-  categoricalEncodings: Record<string, string[]>;
-  textProcessing: {
-    maxLength: number;
-    stopWords: string[];
-    relevantKeywords: string[];
+interface RawData {
+  candidateId: string;
+  age: number;
+  education_level: string;
+  location: string;
+  experience: {
+    total_years: number;
+    insurance_years: number;
+    positions: Array<{
+      title: string;
+      industry: string;
+      end_date: string;
+    }>;
+  };
+  skills: {
+    technical: string[];
+    soft: string[];
+    certifications: string[];
+  };
+  assessments: {
+    technical_score: number;
+    sales_score: number;
+    disc?: {
+      dominance: number;
+      influence: number;
+      steadiness: number;
+      compliance: number;
+    };
+  };
+  textData: {
+    resume: string;
+    cover_letter: string;
+    interview_responses: string[];
   };
 }
 
@@ -319,7 +345,6 @@ class InsuranceFeatureProcessor {
   }
 }
 
-// Edge Function Handler with CORS support
 serve(async (req: Request) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -337,6 +362,14 @@ serve(async (req: Request) => {
     // Input validation
     if (!rawData) {
       throw new Error('No raw data provided');
+    }
+
+    // Validate required fields
+    const requiredFields = ['candidateId', 'age', 'education_level', 'location', 'experience', 'skills', 'assessments'];
+    for (const field of requiredFields) {
+      if (!(field in rawData)) {
+        throw new Error(`Missing required field: ${field}`);
+      }
     }
 
     console.log('Processing features for candidate:', rawData.candidateId);
