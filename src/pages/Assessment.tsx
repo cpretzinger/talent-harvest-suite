@@ -40,7 +40,12 @@ const Assessment = () => {
         .single();
 
       if (error) throw error;
-      return data as AssessmentData;
+      
+      // Convert the JSON data to match our AssessmentData interface
+      return {
+        ...data,
+        questions: data.questions as Question[],
+      } as AssessmentData;
     },
   });
 
