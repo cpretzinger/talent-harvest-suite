@@ -12,7 +12,7 @@ const data = [
 
 export const AgencyTimelineChart = () => {
   return (
-    <div className="w-full h-[400px]">
+    <div className="w-full h-[400px] flex flex-col">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 20, right: 80, left: 40, bottom: 20 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#26361C" strokeWidth={1.5} className="opacity-80" />
@@ -103,6 +103,9 @@ export const AgencyTimelineChart = () => {
           />
         </LineChart>
       </ResponsiveContainer>
+      <p className="text-center mt-6 text-lg font-semibold bg-gradient-to-r from-primary/90 to-secondary/90 bg-clip-text text-transparent drop-shadow-sm">
+        We Were On Our Way To Sick And Broke
+      </p>
     </div>
   );
 };
