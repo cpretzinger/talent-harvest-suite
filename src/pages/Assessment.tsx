@@ -9,15 +9,11 @@ import { Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { QuestionDisplay } from "@/components/assessment/QuestionDisplay";
 import { AssessmentResults } from "@/components/assessment/AssessmentResults";
-import { Question, Json } from "@/types/assessment";
+import { Question } from "@/types/assessment";
+import { Tables } from "@/integrations/supabase/types";
 
-interface AssessmentData {
-  id: string;
-  questions: Question[] | null;
-  responses: Json[] | null;
-  started_at: string | null;
-  completed_at: string | null;
-  completion_time: number | null;
+interface AssessmentData extends Tables<"assessments"> {
+  questions: Question[];
 }
 
 const Assessment = () => {
@@ -26,7 +22,7 @@ const Assessment = () => {
   const { toast } = useToast();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(3600);
-  const [responses, setResponses] = useState<Json[]>([]);
+  const [responses, setResponses] = useState<any[]>([]);
 
   const { data: assessment, isLoading } = useQuery({
     queryKey: ["assessment", id],
@@ -39,12 +35,18 @@ const Assessment = () => {
 
       if (error) throw error;
       
+      // Transform the raw questions data into our Question type
       const questions = Array.isArray(data.questions) 
         ? data.questions.map((q: any) => ({
-            question: q.question as string,
-            options: q.options as string[]
+            id: q.id || crypto.randomUUID(),
+            text: q.question,
+            category: q.category || 'Decisive',
+            type: q.type || 'multiple_choice',
+            options: q.options,
+            weight: q.weight || 1,
+            subCategory: q.subCategory
           }))
-        : null;
+        : [];
 
       return {
         ...data,
@@ -131,7 +133,7 @@ const Assessment = () => {
   }
 
   const questions = assessment?.questions || [];
-  const currentQuestionData = questions[currentQuestion] as Question;
+  const currentQuestionData = questions[currentQuestion];
   const progress = ((currentQuestion + 1) / questions.length) * 100;
 
   return (
@@ -151,22 +153,18 @@ const Assessment = () => {
             <div className="space-y-6">
               <QuestionDisplay
                 question={currentQuestionData}
-                onAnswer={handleAnswer}
+                onAnswer={(answer) => {
+                  setResponses(prev => [...prev, {
+                    questionId: currentQuestionData.id,
+                    answer
+                  }]);
+                  if (currentQuestion < questions.length - 1) {
+                    setCurrentQuestion(prev => prev + 1);
+                  } else {
+                    handleSubmit();
+                  }
+                }}
               />
-              <div className="flex justify-between mt-6">
-                <Button
-                  variant="outline"
-                  onClick={handlePrevious}
-                  disabled={currentQuestion === 0}
-                >
-                  Previous
-                </Button>
-                {currentQuestion === questions.length - 1 ? (
-                  <Button onClick={handleSubmit}>Submit</Button>
-                ) : (
-                  <Button onClick={handleNext}>Next</Button>
-                )}
-              </div>
             </div>
           )}
         </CardContent>

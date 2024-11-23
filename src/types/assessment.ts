@@ -13,13 +13,11 @@ export type AssessmentCategory =
   | 'Regulatory'
   | 'Theoretical';
 
-export type ScoreLevel = 'Excellent' | 'Very Good' | 'Good' | 'Fair' | 'Poor';
-
 export interface Question {
   id: string;
   text: string;
   category: AssessmentCategory;
-  subCategory: string;
+  subCategory?: string;
   type: QuestionType;
   options?: string[];
   weight: number;
@@ -28,29 +26,8 @@ export interface Question {
 export interface Assessment {
   id: string;
   title: string;
-  description: string;
-  categories: AssessmentCategory[];
+  description?: string;
   questions: Question[];
-}
-
-export interface CategoryScore {
-  category: AssessmentCategory;
-  score: number;
-  level: ScoreLevel;
-  insights: string[];
-}
-
-export interface DimensionalBalance {
-  external: {
-    empathy: number;
-    practicalThinking: number;
-    systemsJudgment: number;
-  };
-  internal: {
-    selfEsteem: number;
-    roleAwareness: number;
-    selfDirection: number;
-  };
 }
 
 export interface StylePattern {
@@ -61,30 +38,13 @@ export interface StylePattern {
 }
 
 export interface ValuesDimension {
-  dimension: AssessmentCategory;
+  dimension: string;
   score: number;
-  level: ScoreLevel;
   description: string;
 }
 
-export interface CoreAttribute {
-  name: string;
-  score: number;
-  category: AssessmentCategory;
-}
-
-export interface Profile {
+export interface AssessmentResult {
   naturalStyle: StylePattern;
   adaptiveStyle: StylePattern;
   values: ValuesDimension[];
-  attributes: CoreAttribute[];
-}
-
-export interface AssessmentResult {
-  userId: string;
-  assessmentId: string;
-  timestamp: Date;
-  scores: CategoryScore[];
-  dimensionalBalance: DimensionalBalance;
-  overallProfile: Profile;
 }
