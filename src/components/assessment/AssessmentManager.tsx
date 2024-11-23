@@ -8,6 +8,7 @@ import { QuestionDisplay } from './QuestionDisplay';
 import { AssessmentProgress } from './AssessmentProgress';
 import { NavigationControls } from './NavigationControls';
 import { LoadingSpinner, ErrorMessage } from './AssessmentStateDisplay';
+import { useToast } from '@/hooks/use-toast';
 
 interface AssessmentManagerProps {
   assessmentId: string;
@@ -16,6 +17,7 @@ interface AssessmentManagerProps {
 }
 
 export const AssessmentManager = ({ assessmentId, userId, onComplete }: AssessmentManagerProps) => {
+  const { toast } = useToast();
   const [currentSection, setCurrentSection] = useState<AssessmentSection>('disc');
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
@@ -56,12 +58,26 @@ export const AssessmentManager = ({ assessmentId, userId, onComplete }: Assessme
   }
 
   const handleQuestionAnswer = async (answer: any) => {
-    await handleAnswer(answer, currentQuestionIndex, questions, answers, onComplete);
-    setCurrentQuestionIndex(prev => prev + 1);
+    try {
+      await handleAnswer(answer, currentQuestionIndex, questions, answers, onComplete);
+      if (currentQuestionIndex < questions.length - 1) {
+        setCurrentQuestionIndex(prev => prev + 1);
+        toast({
+          title: "Answer saved",
+          description: "Your response has been recorded",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to save your answer. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <AssessmentProgress progress={progress} section={currentSection} />
       <QuestionDisplay
         question={currentQuestion}

@@ -42,6 +42,10 @@ export default function AssessmentPage() {
   });
 
   const handleComplete = async (results: any) => {
+    toast({
+      title: "Assessment Complete",
+      description: "Your responses have been submitted successfully.",
+    });
     navigate(`/assessment-complete`);
   };
 
