@@ -7,6 +7,7 @@ import { Send, X, MessageCircle } from "lucide-react";
 import { useToast } from "./ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Draggable from "react-draggable";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Message {
   id: string;
@@ -19,8 +20,14 @@ export function ChatBox() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
+
+  // Don't render if user is not authenticated
+  if (!user) {
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
