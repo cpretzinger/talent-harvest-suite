@@ -1,0 +1,4 @@
+project_id = "qzsvxbftzrqpwyklumun"
+
+[functions.feature-processor]
+verify_jwt = true
