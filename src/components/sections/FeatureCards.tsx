@@ -7,7 +7,8 @@ import {
   FileUp, 
   Users, 
   Calendar, 
-  Mail 
+  Mail,
+  Database 
 } from "lucide-react";
 
 export const FeatureCards = () => {
@@ -67,6 +68,13 @@ export const FeatureCards = () => {
       icon: Mail,
       imageSrc: "https://images.unsplash.com/photo-1557200134-90327ee9fafa",
       imageAlt: "Person working on laptop with emails"
+    },
+    {
+      title: "Data Analytics Dashboard",
+      description: "Make data-driven decisions with our comprehensive analytics dashboard. Track key metrics, identify trends, and optimize your recruitment process with real-time insights.",
+      icon: Database,
+      imageSrc: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
+      imageAlt: "Person using MacBook Pro with analytics"
     },
   ];
 
