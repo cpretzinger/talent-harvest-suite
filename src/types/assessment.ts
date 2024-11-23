@@ -3,6 +3,7 @@ import { Tables } from "./database/tables";
 export type Question = Tables<"questions"> & {
   options?: string[];
 };
+
 export type Assessment = Tables<"assessments">;
 export type AssessmentResult = Tables<"assessment_results">;
 export type Response = Tables<"responses">;
@@ -42,12 +43,23 @@ export interface Profile {
 }
 
 export interface DimensionalBalance {
-  primary: string;
-  secondary: string;
-  score: number;
+  external: {
+    empathy: number;
+    practicalThinking: number;
+    systemsJudgment: number;
+  };
+  internal: {
+    selfEsteem: number;
+    roleAwareness: number;
+    selfDirection: number;
+  };
 }
+
+export type ScoreLevel = 'Excellent' | 'Very Good' | 'Good' | 'Fair' | 'Poor';
 
 export interface CategoryScore {
   category: string;
   score: number;
+  level: ScoreLevel;
+  insights: string[];
 }
