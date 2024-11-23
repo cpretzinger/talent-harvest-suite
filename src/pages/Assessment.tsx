@@ -41,10 +41,17 @@ const Assessment = () => {
 
       if (error) throw error;
       
-      // Convert the JSON data to match our AssessmentData interface
+      // Safely cast the JSON data to our Question[] type
+      const questions = Array.isArray(data.questions) 
+        ? data.questions.map((q: any) => ({
+            question: q.question as string,
+            options: q.options as string[]
+          }))
+        : null;
+
       return {
         ...data,
-        questions: data.questions as Question[],
+        questions
       } as AssessmentData;
     },
   });
