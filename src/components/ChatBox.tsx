@@ -3,9 +3,10 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
 import { Card } from "./ui/card";
-import { Send } from "lucide-react";
+import { Send, X, MessageCircle } from "lucide-react";
 import { useToast } from "./ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import Draggable from "react-draggable";
 
 interface Message {
   id: string;
@@ -18,6 +19,7 @@ export function ChatBox() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -66,51 +68,74 @@ export function ChatBox() {
     }
   };
 
-  return (
-    <Card className="flex flex-col h-full border-2">
-      <div className="p-4 border-b bg-primary text-primary-foreground">
-        <h2 className="text-lg font-semibold">AI Assistant</h2>
-      </div>
-      
-      <ScrollArea className="flex-1 p-4">
-        <div className="space-y-4">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              className={`flex ${
-                message.isUser ? "justify-end" : "justify-start"
-              }`}
-            >
-              <div
-                className={`max-w-[80%] rounded-lg p-3 ${
-                  message.isUser
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-secondary-foreground"
-                }`}
-              >
-                <p className="text-sm">{message.content}</p>
-                <span className="text-xs opacity-70">
-                  {message.timestamp.toLocaleTimeString()}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </ScrollArea>
+  if (!isOpen) {
+    return (
+      <Button
+        onClick={() => setIsOpen(true)}
+        className="fixed bottom-4 right-4 rounded-full p-4 shadow-lg hover:shadow-xl transition-shadow"
+      >
+        <MessageCircle className="h-6 w-6" />
+      </Button>
+    );
+  }
 
-      <form onSubmit={handleSubmit} className="p-4 border-t">
-        <div className="flex gap-2">
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message..."
-            disabled={isLoading}
-          />
-          <Button type="submit" disabled={isLoading}>
-            <Send className="h-4 w-4" />
-          </Button>
-        </div>
-      </form>
-    </Card>
+  return (
+    <Draggable handle=".drag-handle" bounds="parent">
+      <div className="absolute right-4 bottom-4 w-96">
+        <Card className="flex flex-col h-[600px] border-2 shadow-xl">
+          <div className="p-4 border-b bg-primary text-primary-foreground drag-handle cursor-move flex justify-between items-center">
+            <h2 className="text-lg font-semibold">AI Assistant</h2>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsOpen(false)}
+              className="hover:bg-primary-foreground/20"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+          
+          <ScrollArea className="flex-1 p-4">
+            <div className="space-y-4">
+              {messages.map((message) => (
+                <div
+                  key={message.id}
+                  className={`flex ${
+                    message.isUser ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  <div
+                    className={`max-w-[80%] rounded-lg p-3 ${
+                      message.isUser
+                        ? "bg-primary text-primary-foreground"
+                        : "bg-secondary text-secondary-foreground"
+                    }`}
+                  >
+                    <p className="text-sm">{message.content}</p>
+                    <span className="text-xs opacity-70">
+                      {message.timestamp.toLocaleTimeString()}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+
+          <form onSubmit={handleSubmit} className="p-4 border-t">
+            <div className="flex gap-2">
+              <Input
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Type your message..."
+                disabled={isLoading}
+              />
+              <Button type="submit" disabled={isLoading}>
+                <Send className="h-4 w-4" />
+              </Button>
+            </div>
+          </form>
+        </Card>
+      </div>
+    </Draggable>
   );
 }
