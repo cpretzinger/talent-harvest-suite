@@ -11,14 +11,11 @@ export class ResultsCalculator {
   }
 
   generateFullReport(responses: AssessmentResponse[]): Omit<AssessmentResult, 'id' | 'created_at'> {
-    // Convert responses to the format expected by AssessmentScorer
     const answers = this.formatResponses(responses);
     const questions = this.extractQuestions(responses);
     
-    // Calculate scores using the AssessmentScorer
     const profile = this.scorer.calculateScores(answers, questions);
     
-    // Format the results for database storage
     return {
       user_id: responses[0].user_id,
       assessment_id: responses[0].assessment_id,
@@ -39,7 +36,7 @@ export class ResultsCalculator {
     return responses.map(response => ({
       id: response.question_id,
       category: response.answer.category || '',
-      sub_category: response.answer.sub_category || '',
+      type: response.answer.type || 'natural',
       weight: 1
     }));
   }
@@ -66,7 +63,6 @@ export class ResultsCalculator {
   }
 
   private generateInsights(category: string, score: number): string[] {
-    // Basic insights based on category and score
     const insights: string[] = [];
     
     if (score > 80) {

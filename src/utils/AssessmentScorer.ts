@@ -5,8 +5,7 @@ import {
   Profile,
   Question,
   ScoreLevel,
-  StylePattern,
-  ValuesDimension
+  StylePattern
 } from '@/types/assessment';
 
 interface ScoreRange {
@@ -69,19 +68,21 @@ export class AssessmentScorer {
     }
   };
 
-  calculateScores(answers: Record<string, any>, questions: Question[]): Profile {
+  calculateScores(answers: Record<string, number>, questions: Question[]): AssessmentResult {
     const discScores = this.calculateDISCScores(answers, questions);
     const valueScores = this.calculateValueScores(answers, questions);
     const dimensionalBalance = this.calculateDimensionalBalance(discScores, valueScores);
 
     return {
-      naturalStyle: discScores.natural,
-      adaptiveStyle: discScores.adaptive,
-      values: this.formatValueScores(valueScores)
+      user_id: '',  // Placeholder; set appropriate user_id
+      assessment_id: '',  // Placeholder; set appropriate assessment_id
+      scores: this.formatCategoryScores(discScores),
+      dimensional_balance: dimensionalBalance,
+      overall_profile: this.formatOverallProfile(discScores, valueScores)
     };
   }
 
-  private calculateDISCScores(answers: Record<string, any>, questions: Question[]): {
+  private calculateDISCScores(answers: Record<string, number>, questions: Question[]): {
     natural: StylePattern;
     adaptive: StylePattern;
   } {
@@ -89,32 +90,31 @@ export class AssessmentScorer {
     const adaptive: StylePattern = { D: 0, I: 0, S: 0, C: 0 };
 
     questions.forEach(question => {
-      if (question.category in natural && answers[question.id]) {
+      if (question.category in natural) {
         const answer = answers[question.id];
-        if (answer.type === 'natural') {
-          natural[question.category as keyof StylePattern] += 
-            (answer.value || 0) * question.weight;
-        } else {
-          adaptive[question.category as keyof StylePattern] += 
-            (answer.value || 0) * question.weight;
+        if (answer) {
+          const key = question.category as keyof StylePattern;
+          if (question.type === 'natural') {
+            natural[key] += answer;
+          } else {
+            adaptive[key] += answer;
+          }
         }
       }
     });
 
     return {
-      natural: this.normalizeScores(natural) as StylePattern,
-      adaptive: this.normalizeScores(adaptive) as StylePattern
+      natural,
+      adaptive
     };
   }
 
-  private calculateValueScores(answers: Record<string, any>, questions: Question[]): Record<string, number> {
+  private calculateValueScores(answers: Record<string, number>, questions: Question[]): Record<string, number> {
     const scores: Record<string, number> = {};
 
     questions.forEach(question => {
-      if (question.sub_category && answers[question.id]) {
-        const value = answers[question.id].value || 0;
-        scores[question.sub_category] = (scores[question.sub_category] || 0) + 
-          value * question.weight;
+      if (question.category && answers[question.id]) {
+        scores[question.category] = (scores[question.category] || 0) + answers[question.id];
       }
     });
 
@@ -145,6 +145,48 @@ export class AssessmentScorer {
       ...acc,
       [key]: Math.round((value / maxScore) * 100)
     }), {});
+  }
+
+  private formatCategoryScores(discScores: { natural: StylePattern; adaptive: StylePattern }): CategoryScore[] {
+    return Object.entries(discScores.natural).map(([category, score]) => ({
+      category,
+      score,
+      level: this.getScoreLevel(score),
+      insights: this.generateInsights(category, score)
+    }));
+  }
+
+  private getScoreLevel(score: number): ScoreLevel {
+    if (score >= 90) return 'Excellent';
+    if (score >= 80) return 'Very Good';
+    if (score >= 70) return 'Good';
+    if (score >= 60) return 'Fair';
+    return 'Poor';
+  }
+
+  private generateInsights(category: string, score: number): string[] {
+    const insights: string[] = [];
+    
+    if (score > 80) {
+      insights.push(`Strong ${category} characteristics`);
+      insights.push(`Natural tendency towards ${category}-related behaviors`);
+    } else if (score > 60) {
+      insights.push(`Moderate ${category} characteristics`);
+      insights.push(`Balanced approach to ${category}-related situations`);
+    } else {
+      insights.push(`Lower emphasis on ${category} characteristics`);
+      insights.push(`May need support in ${category}-related situations`);
+    }
+
+    return insights;
+  }
+
+  private formatOverallProfile(discScores: { natural: StylePattern; adaptive: StylePattern }, valueScores: Record<string, number>): Profile {
+    return {
+      naturalStyle: discScores.natural,
+      adaptiveStyle: discScores.adaptive,
+      values: this.formatValueScores(valueScores)
+    };
   }
 
   private formatValueScores(scores: Record<string, number>): ValuesDimension[] {
