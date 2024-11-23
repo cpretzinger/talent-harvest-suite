@@ -4,7 +4,7 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { AssessmentManager } from '@/components/assessment/AssessmentManager';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import type { PostgrestResponse } from '@supabase/supabase-js';
+import type { PostgrestResponse, PostgrestSingleResponse } from '@supabase/supabase-js';
 
 // Mock the auth context
 vi.mock('@/contexts/AuthContext', () => ({
@@ -17,7 +17,13 @@ vi.mock('@/integrations/supabase/client', () => ({
     from: vi.fn(() => ({
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({ data: null, error: null } as PostgrestResponse<any>)
+      single: vi.fn().mockResolvedValue({ data: null, error: null } as PostgrestSingleResponse<any>),
+      url: 'mock-url',
+      headers: {},
+      insert: vi.fn(),
+      upsert: vi.fn(),
+      delete: vi.fn(),
+      update: vi.fn()
     }))
   }
 }));
@@ -44,11 +50,25 @@ describe('AssessmentManager', () => {
   });
 
   it('displays error message when assessment fails to load', async () => {
-    vi.mocked(supabase.from).mockImplementationOnce(() => ({
+    const mockSupabaseResponse = {
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({ data: null, error: new Error('Failed to load') } as PostgrestResponse<any>)
-    }));
+      single: vi.fn().mockResolvedValue({ 
+        data: null, 
+        error: new Error('Failed to load'),
+        count: null,
+        status: 404,
+        statusText: 'Not Found',
+        url: 'mock-url',
+        headers: {},
+        insert: vi.fn(),
+        upsert: vi.fn(),
+        delete: vi.fn(),
+        update: vi.fn()
+      } as PostgrestSingleResponse<any>)
+    };
+
+    vi.mocked(supabase.from).mockImplementationOnce(() => mockSupabaseResponse);
 
     render(<AssessmentManager {...defaultProps} />);
     
