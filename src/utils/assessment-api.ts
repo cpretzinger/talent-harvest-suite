@@ -47,7 +47,11 @@ export const assessmentApi = {
     return data;
   },
 
-  submitAssessment: async (assessmentId: string, answers: Record<string, any>) => {
+  submitAssessment: async (assessmentId: string, results: {
+    scores: any[];
+    dimensional_balance: any;
+    overall_profile: any;
+  }) => {
     const { data: session } = await supabase.auth.getSession();
     if (!session.session) {
       throw new Error('Unauthorized');
@@ -58,7 +62,9 @@ export const assessmentApi = {
       .insert({
         user_id: session.session.user.id,
         assessment_id: assessmentId,
-        answers
+        scores: results.scores,
+        dimensional_balance: results.dimensional_balance,
+        overall_profile: results.overall_profile
       })
       .select()
       .single();

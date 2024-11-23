@@ -5,11 +5,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { LoadingSpinner } from "@/components/assessment/AssessmentStateDisplay";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function AssessmentPage() {
   const { id: assessmentId } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const { data: assessment, isLoading } = useQuery({
     queryKey: ["assessment", assessmentId],
@@ -62,6 +64,11 @@ export default function AssessmentPage() {
     );
   }
 
+  if (!user) {
+    navigate('/login');
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="container mx-auto px-4">
@@ -69,6 +76,7 @@ export default function AssessmentPage() {
           <CardContent className="p-6">
             <AssessmentManager
               assessmentId={assessmentId!}
+              userId={user.id}
               onComplete={handleComplete}
             />
           </CardContent>

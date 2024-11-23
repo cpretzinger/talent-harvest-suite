@@ -1,8 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { vi } from 'vitest';
+import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { AssessmentManager } from '@/components/assessment/AssessmentManager';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 
 // Mock the auth context
 vi.mock('@/contexts/AuthContext', () => ({
@@ -54,6 +55,4 @@ describe('AssessmentManager', () => {
       expect(screen.getByText(/error/i)).toBeInTheDocument();
     });
   });
-
-  // Add more tests as needed
 });
