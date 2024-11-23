@@ -289,6 +289,42 @@ export type Database = {
           },
         ]
       }
+      market_data: {
+        Row: {
+          competitor_density: number
+          created_at: string
+          growth_rate: number
+          id: string
+          insurance_penetration: number
+          market_name: string
+          median_income: number
+          population: number
+          updated_at: string
+        }
+        Insert: {
+          competitor_density: number
+          created_at?: string
+          growth_rate: number
+          id?: string
+          insurance_penetration: number
+          market_name: string
+          median_income: number
+          population: number
+          updated_at?: string
+        }
+        Update: {
+          competitor_density?: number
+          created_at?: string
+          growth_rate?: number
+          id?: string
+          insurance_penetration?: number
+          market_name?: string
+          median_income?: number
+          population?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ml_feature_store: {
         Row: {
           feature_name: string

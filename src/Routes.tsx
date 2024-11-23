@@ -4,6 +4,7 @@ import ResourcesPage from "@/pages/Resources";
 import Index from "@/pages/Index";
 import Leads from "@/pages/Leads";
 import { AssessmentResults } from "@/components/assessment/AssessmentResults";
+import MarketAnalysis from "@/pages/MarketAnalysis";
 
 export const AppRoutes = () => {
   return (
@@ -14,6 +15,7 @@ export const AppRoutes = () => {
       <Route path="/assessment-results/:id" element={<AssessmentResults />} />
       <Route path="/resources" element={<ResourcesPage />} />
       <Route path="/resources/category/:categorySlug" element={<ResourcesPage />} />
+      <Route path="/market-analysis" element={<MarketAnalysis />} />
     </RouterRoutes>
   );
 };
