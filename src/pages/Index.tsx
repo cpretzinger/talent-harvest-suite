@@ -5,11 +5,16 @@ import { HealthImpactSection } from "@/components/sections/HealthImpactSection";
 import { AgencyTimelineChart } from "@/components/sections/AgencyTimelineChart";
 import { BrickWall } from "@/components/sections/BrickWall";
 import { FeatureCards } from "@/components/sections/FeatureCards";
+import { ChatBox } from "@/components/ChatBox";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-cream">
       <Navigation />
+      
+      <div className="fixed right-0 top-20 bottom-0 w-1/3 p-4 bg-cream/80 backdrop-blur-sm shadow-xl z-50">
+        <ChatBox />
+      </div>
       
       {/* Hero Section */}
       <section className="min-h-screen flex items-center justify-center relative overflow-hidden">
