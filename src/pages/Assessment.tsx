@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,7 +7,6 @@ import { Progress } from "@/components/ui/progress";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { QuestionDisplay } from "@/components/assessment/QuestionDisplay";
-import { useAuth } from "@/contexts/AuthContext";
 import { Tables } from "@/types/database/tables";
 
 type Question = Tables<"questions">;
@@ -17,7 +16,6 @@ const Assessment = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { user } = useAuth();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(3600);
 
@@ -40,10 +38,13 @@ const Assessment = () => {
 
   const { mutate: submitResponse } = useMutation({
     mutationFn: async (answer: any) => {
-      if (!user?.id || !id || !assessment?.questions?.[currentQuestionIndex]) return;
+      if (!id || !assessment?.questions?.[currentQuestionIndex]) return;
+
+      // Temporarily using a mock user ID for development
+      const mockUserId = "00000000-0000-0000-0000-000000000000";
 
       const response = {
-        user_id: user.id,
+        user_id: mockUserId,
         assessment_id: id,
         question_id: assessment.questions[currentQuestionIndex].id,
         answer,
@@ -72,17 +73,20 @@ const Assessment = () => {
   });
 
   const handleComplete = async () => {
-    if (!user?.id || !id) return;
+    if (!id) return;
 
     try {
+      // Temporarily using a mock user ID for development
+      const mockUserId = "00000000-0000-0000-0000-000000000000";
+
       const { data: responses } = await supabase
         .from("responses")
         .select("*")
         .eq("assessment_id", id)
-        .eq("user_id", user.id);
+        .eq("user_id", mockUserId);
 
       const result = {
-        user_id: user.id,
+        user_id: mockUserId,
         assessment_id: id,
         scores: calculateScores(responses || []),
         dimensional_balance: calculateDimensionalBalance(responses || []),
@@ -109,21 +113,6 @@ const Assessment = () => {
       });
     }
   };
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeRemaining((prev) => {
-        if (prev <= 0) {
-          clearInterval(timer);
-          handleComplete();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
 
   if (isLoadingAssessment) {
     return (
@@ -153,7 +142,7 @@ const Assessment = () => {
         <CardContent>
           {currentQuestion && (
             <QuestionDisplay
-              question={currentQuestion}
+              question={currentQuestion as any}
               onAnswer={submitResponse}
             />
           )}
@@ -176,7 +165,11 @@ const calculateDimensionalBalance = (responses: Response[]) => {
 
 const calculateOverallProfile = (responses: Response[]) => {
   // Implement overall profile calculation
-  return {};
+  return {
+    naturalStyle: { D: 0, I: 0, S: 0, C: 0 },
+    adaptiveStyle: { D: 0, I: 0, S: 0, C: 0 },
+    values: []
+  };
 };
 
 export default Assessment;

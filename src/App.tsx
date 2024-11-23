@@ -1,5 +1,4 @@
 import { BrowserRouter as Router } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { Routes } from "./Routes";
@@ -10,10 +9,11 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <AuthProvider>
+        {/* Temporarily commented out for development
+        <AuthProvider> */}
           <Routes />
           <Toaster />
-        </AuthProvider>
+        {/* </AuthProvider> */}
       </Router>
     </QueryClientProvider>
   );
