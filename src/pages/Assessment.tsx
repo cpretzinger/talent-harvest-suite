@@ -32,7 +32,7 @@ const Assessment = () => {
           *,
           questions (*)
         `)
-        .eq('id', id)
+        .eq("id", id)
         .single();
 
       if (error) {
@@ -46,7 +46,7 @@ const Assessment = () => {
       
       return data;
     },
-    enabled: !!id,
+    enabled: Boolean(id),
   });
 
   const { mutate: submitResponse } = useMutation({
@@ -98,15 +98,19 @@ const Assessment = () => {
 
       if (responsesError) throw responsesError;
 
-      // Cast the responses to the correct type
       const responses = (responsesData || []) as AssessmentResponse[];
 
-      // Calculate results using the ResultsCalculator
       const result = resultsCalculator.generateFullReport(responses);
 
       const { error: resultsError } = await supabase
         .from("assessment_results")
-        .insert([result]);
+        .insert([{
+          user_id: mockUserId,
+          assessment_id: id,
+          scores: result.scores,
+          dimensional_balance: result.dimensionalBalance,
+          overall_profile: result.overallProfile
+        }]);
 
       if (resultsError) throw resultsError;
 
