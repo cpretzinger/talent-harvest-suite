@@ -94,4 +94,35 @@ describe('AssessmentManager', () => {
       expect(screen.getByText(/error/i)).toBeInTheDocument();
     });
   });
+
+  it('loads questions successfully', async () => {
+    const mockQuestions = [
+      {
+        id: '1',
+        text: 'Test Question 1',
+        category: 'disc',
+        type: 'multiple_choice',
+        options: ['Option 1', 'Option 2']
+      }
+    ];
+
+    const mockSupabaseResponse = {
+      select: vi.fn().mockReturnThis(),
+      eq: vi.fn().mockReturnThis(),
+      order: vi.fn().mockReturnThis(),
+      single: vi.fn().mockResolvedValue({ 
+        data: { questions: mockQuestions },
+        error: null
+      } as PostgrestSingleResponse<any>)
+    };
+
+    vi.mocked(supabase.from).mockImplementationOnce(() => mockSupabaseResponse as any);
+
+    render(<AssessmentManager {...defaultProps} />);
+    
+    await waitFor(() => {
+      expect(screen.queryByRole('progressbar')).not.toBeInTheDocument();
+      expect(screen.getByText('Test Question 1')).toBeInTheDocument();
+    });
+  });
 });
