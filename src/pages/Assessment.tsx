@@ -13,8 +13,6 @@ import { Tables } from "@/types/database/tables";
 import { AssessmentResponse } from "@/types/assessmentTypes";
 import { ResultsCalculator } from "@/utils/ResultsCalculator";
 
-type Question = Tables<"questions">;
-
 const Assessment = () => {
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
@@ -106,7 +104,6 @@ const Assessment = () => {
 
       if (error) throw error;
 
-      // Update invitation progress if applicable
       if (token) {
         await supabase
           .from("assessment_invitations")
@@ -145,10 +142,8 @@ const Assessment = () => {
       if (responsesError) throw responsesError;
 
       const responses = (responsesData || []) as AssessmentResponse[];
-
       const result = resultsCalculator.generateFullReport(responses);
 
-      // Convert complex types to JSON for storage
       const resultForStorage = {
         user_id: mockUserId,
         assessment_id: id,
@@ -197,7 +192,6 @@ const Assessment = () => {
     );
   }
 
-  // Show invitation form for admins
   if (profile?.role === "administrator" && !token) {
     return (
       <div className="container mx-auto px-4 py-8">
