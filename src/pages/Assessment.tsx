@@ -26,8 +26,11 @@ const Assessment = () => {
       
       const { data, error } = await supabase
         .from("assessments")
-        .select("*, questions(*)")
-        .eq("id", id)
+        .select(`
+          *,
+          questions (*)
+        `)
+        .eq('id', id)
         .single();
 
       if (error) throw error;
@@ -40,7 +43,6 @@ const Assessment = () => {
     mutationFn: async (answer: any) => {
       if (!id || !assessment?.questions?.[currentQuestionIndex]) return;
 
-      // Temporarily using a mock user ID for development
       const mockUserId = "00000000-0000-0000-0000-000000000000";
 
       const response = {
@@ -76,7 +78,6 @@ const Assessment = () => {
     if (!id) return;
 
     try {
-      // Temporarily using a mock user ID for development
       const mockUserId = "00000000-0000-0000-0000-000000000000";
 
       const { data: responses } = await supabase
@@ -154,17 +155,14 @@ const Assessment = () => {
 
 // Helper functions for calculating results
 const calculateScores = (responses: Response[]) => {
-  // Implement scoring logic based on responses
   return {};
 };
 
 const calculateDimensionalBalance = (responses: Response[]) => {
-  // Implement dimensional balance calculation
   return {};
 };
 
 const calculateOverallProfile = (responses: Response[]) => {
-  // Implement overall profile calculation
   return {
     naturalStyle: { D: 0, I: 0, S: 0, C: 0 },
     adaptiveStyle: { D: 0, I: 0, S: 0, C: 0 },
