@@ -1,4 +1,6 @@
-import { AssessmentCategory, Question, DimensionalBalance, Profile, CategoryScore } from './assessment';
+import { AssessmentCategory } from './assessment/category';
+import { Question, DimensionalBalance, Profile, CategoryScore } from './assessment';
+import { Json } from './database/schema';
 
 export type Json =
   | string
@@ -6,7 +8,7 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[]
+  | Json[];
 
 export interface Database {
   public: {
@@ -72,147 +74,147 @@ export interface Database {
       };
       documents: {
         Row: {
-          created_at: string | null
-          file_name: string
-          file_path: string
-          file_type: string | null
-          id: string
-          lead_id: string | null
-          updated_at: string | null
-          uploaded_by: string | null
-        }
+          created_at: string | null;
+          file_name: string;
+          file_path: string;
+          file_type: string | null;
+          id: string;
+          lead_id: string | null;
+          updated_at: string | null;
+          uploaded_by: string | null;
+        };
         Insert: {
-          created_at?: string | null
-          file_name: string
-          file_path: string
-          file_type?: string | null
-          id?: string
-          lead_id?: string | null
-          updated_at?: string | null
-          uploaded_by?: string | null
-        }
+          created_at?: string | null;
+          file_name: string;
+          file_path: string;
+          file_type?: string | null;
+          id?: string;
+          lead_id?: string | null;
+          updated_at?: string | null;
+          uploaded_by?: string | null;
+        };
         Update: {
-          created_at?: string | null
-          file_name?: string
-          file_path?: string
-          file_type?: string | null
-          id?: string
-          lead_id?: string | null
-          updated_at?: string | null
-          uploaded_by?: string | null
-        }
+          created_at?: string | null;
+          file_name?: string;
+          file_path?: string;
+          file_type?: string | null;
+          id?: string;
+          lead_id?: string | null;
+          updated_at?: string | null;
+          uploaded_by?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "documents_lead_id_fkey"
-            columns: ["lead_id"]
-            isOneToOne: false
-            referencedRelation: "leads"
-            referencedColumns: ["id"]
+            foreignKeyName: "documents_lead_id_fkey";
+            columns: ["lead_id"];
+            isOneToOne: false;
+            referencedRelation: "leads";
+            referencedColumns: ["id"];
           },
           {
-            foreignKeyName: "documents_uploaded_by_fkey"
-            columns: ["uploaded_by"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            foreignKeyName: "documents_uploaded_by_fkey";
+            columns: ["uploaded_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       leads: {
         Row: {
-          assessment_score: number | null
-          assigned_to: string | null
-          communication_history: Json[] | null
-          created_at: string | null
-          email: string
-          first_name: string
-          follow_ups: Json[] | null
-          id: string
-          last_name: string
-          notes: string[] | null
-          phone: string | null
-          pipeline_stage: string | null
-          placement_status: string | null
-          source: string | null
-          status: string
-          tasks: Json[] | null
-          updated_at: string | null
-        }
+          assessment_score: number | null;
+          assigned_to: string | null;
+          communication_history: Json[] | null;
+          created_at: string | null;
+          email: string;
+          first_name: string;
+          follow_ups: Json[] | null;
+          id: string;
+          last_name: string;
+          notes: string[] | null;
+          phone: string | null;
+          pipeline_stage: string | null;
+          placement_status: string | null;
+          source: string | null;
+          status: string;
+          tasks: Json[] | null;
+          updated_at: string | null;
+        };
         Insert: {
-          assessment_score?: number | null
-          assigned_to?: string | null
-          communication_history?: Json[] | null
-          created_at?: string | null
-          email: string
-          first_name: string
-          follow_ups?: Json[] | null
-          id?: string
-          last_name: string
-          notes?: string[] | null
-          phone?: string | null
-          pipeline_stage?: string | null
-          placement_status?: string | null
-          source?: string | null
-          status?: string
-          tasks?: Json[] | null
-          updated_at?: string | null
-        }
+          assessment_score?: number | null;
+          assigned_to?: string | null;
+          communication_history?: Json[] | null;
+          created_at?: string | null;
+          email: string;
+          first_name: string;
+          follow_ups?: Json[] | null;
+          id?: string;
+          last_name: string;
+          notes?: string[] | null;
+          phone?: string | null;
+          pipeline_stage?: string | null;
+          placement_status?: string | null;
+          source?: string | null;
+          status?: string;
+          tasks?: Json[] | null;
+          updated_at?: string | null;
+        };
         Update: {
-          assessment_score?: number | null
-          assigned_to?: string | null
-          communication_history?: Json[] | null
-          created_at?: string | null
-          email?: string
-          first_name?: string
-          follow_ups?: Json[] | null
-          id?: string
-          last_name?: string
-          notes?: string[] | null
-          phone?: string | null
-          pipeline_stage?: string | null
-          placement_status?: string | null
-          source?: string | null
-          status?: string
-          tasks?: Json[] | null
-          updated_at?: string | null
-        }
+          assessment_score?: number | null;
+          assigned_to?: string | null;
+          communication_history?: Json[] | null;
+          created_at?: string | null;
+          email?: string;
+          first_name?: string;
+          follow_ups?: Json[] | null;
+          id?: string;
+          last_name?: string;
+          notes?: string[] | null;
+          phone?: string | null;
+          pipeline_stage?: string | null;
+          placement_status?: string | null;
+          source?: string | null;
+          status?: string;
+          tasks?: Json[] | null;
+          updated_at?: string | null;
+        };
         Relationships: [
           {
-            foreignKeyName: "leads_assigned_to_fkey"
-            columns: ["assigned_to"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
+            foreignKeyName: "leads_assigned_to_fkey";
+            columns: ["assigned_to"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
           },
-        ]
-      }
+        ];
+      };
       profiles: {
         Row: {
-          created_at: string
-          first_name: string | null
-          id: string
-          last_name: string | null
-          role: Database["public"]["Enums"]["user_role"]
-          updated_at: string
-        }
+          created_at: string;
+          first_name: string | null;
+          id: string;
+          last_name: string | null;
+          role: Database["public"]["Enums"]["user_role"];
+          updated_at: string;
+        };
         Insert: {
-          created_at?: string
-          first_name?: string | null
-          id: string
-          last_name?: string | null
-          role?: Database["public"]["Enums"]["user_role"]
-          updated_at?: string
-        }
+          created_at?: string;
+          first_name?: string | null;
+          id: string;
+          last_name?: string | null;
+          role?: Database["public"]["Enums"]["user_role"];
+          updated_at?: string;
+        };
         Update: {
-          created_at?: string
-          first_name?: string | null
-          id?: string
-          last_name?: string | null
-          role?: Database["public"]["Enums"]["user_role"]
-          updated_at?: string
-        }
-        Relationships: []
-      }
+          created_at?: string;
+          first_name?: string | null;
+          id?: string;
+          last_name?: string | null;
+          role?: Database["public"]["Enums"]["user_role"];
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
