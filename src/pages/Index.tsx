@@ -123,7 +123,7 @@ const Index = () => {
             </h3>
             <ul className="space-y-6 text-lg opacity-90">
               <li className="flex items-start space-x-4">
-                <span className="font-semibold min-w-fit">The Problem:</span>
+                <span className="font-semibold min-w-fit">Our Problem:</span>
                 <span>You're trapped in a cycle of micromanagement and crisis control.</span>
               </li>
               <li className="flex items-start space-x-4">
@@ -148,11 +148,11 @@ const Index = () => {
         <div className="container mx-auto px-6">
           <div className="glass-morphism p-12 rounded-xl hover-lift">
             <h3 className="text-3xl md:text-4xl font-bold mb-8 text-primary">
-              The Problem
+              Our Problem
             </h3>
             <ul className="space-y-6 text-lg opacity-90">
               <li className="flex items-start space-x-4">
-                <span className="font-semibold min-w-fit">The Problem:</span>
+                <span className="font-semibold min-w-fit">Our Problem:</span>
                 <span>Your agency owns you instead of you owning your agency.</span>
               </li>
               <li className="flex items-start space-x-4">
