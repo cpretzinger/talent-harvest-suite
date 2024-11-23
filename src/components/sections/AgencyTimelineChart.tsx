@@ -12,7 +12,7 @@ const data = [
 
 export const AgencyTimelineChart = () => {
   return (
-    <div className="w-full h-[400px] flex flex-col">
+    <div className="w-full h-[400px] flex flex-col hidden md:flex">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 20, right: 80, left: 40, bottom: 20 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#26361C" strokeWidth={1.5} className="opacity-80" />
