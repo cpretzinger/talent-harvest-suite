@@ -140,7 +140,7 @@ export const AssessmentReport = ({ results }: AssessmentReportProps) => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {results.scores.map((score: any, index: number) => (
+            {results.scores.map((score, index) => (
               <div key={index} className="space-y-2">
                 <div className="flex justify-between items-center">
                   <h3 className="font-medium">{score.category}</h3>
@@ -154,7 +154,7 @@ export const AssessmentReport = ({ results }: AssessmentReportProps) => {
                     />
                   </div>
                   <ul className="text-sm text-gray-600 list-disc pl-5">
-                    {score.insights.map((insight: string, i: number) => (
+                    {score.insights.map((insight, i) => (
                       <li key={i}>{insight}</li>
                     ))}
                   </ul>

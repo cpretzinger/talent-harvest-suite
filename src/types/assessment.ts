@@ -44,18 +44,27 @@ export interface CategoryScore {
 export interface AssessmentResult {
   user_id: string;
   assessment_id: string;
-  scores: Json;
-  dimensional_balance: Json;
-  overall_profile: Json;
+  scores: CategoryScore[];
+  dimensional_balance: DimensionalBalance;
+  overall_profile: Profile;
 }
 
-export type Question = {
+export interface Assessment {
+  id: string;
+  title: string;
+  description: string | null;
+  questions: Question[];
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Question {
   id: string;
   assessment_id: string;
   text: string;
   category: string;
   type: string;
-  options?: Json | null;
+  options?: string[];
   weight: number;
   created_at: string;
-};
+}

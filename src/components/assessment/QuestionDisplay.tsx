@@ -11,13 +11,15 @@ interface QuestionDisplayProps {
 export const QuestionDisplay = ({ question, onAnswer }: QuestionDisplayProps) => {
   if (!question) return null;
 
+  const options = question.options as string[] | undefined;
+
   switch (question.type) {
     case "likert":
       return <LikertQuestion question={question} onAnswer={onAnswer} />;
     case "ranking":
-      return <RankingQuestion question={question} onAnswer={onAnswer} />;
+      return options ? <RankingQuestion question={{ ...question, options }} onAnswer={onAnswer} /> : null;
     case "multiple_choice":
-      return <MultipleChoiceQuestion question={question} onAnswer={onAnswer} />;
+      return options ? <MultipleChoiceQuestion question={{ ...question, options }} onAnswer={onAnswer} /> : null;
     default:
       return null;
   }
