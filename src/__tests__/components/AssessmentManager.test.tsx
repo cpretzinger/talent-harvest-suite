@@ -18,6 +18,7 @@ vi.mock('@/integrations/supabase/client', () => ({
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
       single: vi.fn().mockResolvedValue({ data: null, error: null } as PostgrestSingleResponse<any>),
+      order: vi.fn().mockReturnThis(),
       url: 'mock-url',
       headers: {},
       insert: vi.fn(),
@@ -53,6 +54,7 @@ describe('AssessmentManager', () => {
     const mockSupabaseResponse = {
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
+      order: vi.fn().mockReturnThis(),
       single: vi.fn().mockResolvedValue({ 
         data: null, 
         error: new Error('Failed to load'),
@@ -68,7 +70,7 @@ describe('AssessmentManager', () => {
       } as PostgrestSingleResponse<any>)
     };
 
-    vi.mocked(supabase.from).mockImplementationOnce(() => mockSupabaseResponse);
+    vi.mocked(supabase.from).mockImplementationOnce(() => mockSupabaseResponse as any);
 
     render(<AssessmentManager {...defaultProps} />);
     
