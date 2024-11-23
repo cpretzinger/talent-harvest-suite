@@ -9,6 +9,7 @@ import { NavigationControls } from './NavigationControls';
 import { LoadingSpinner, ErrorMessage } from './AssessmentStateDisplay';
 import { useToast } from "@/hooks/use-toast";
 import { generatePDFReport } from '@/utils/reportGenerator';
+import { Json } from '@/types/database/schema';
 
 interface AssessmentManagerProps {
   assessmentId: string;
@@ -133,15 +134,16 @@ export const AssessmentManager = ({ assessmentId, userId, onComplete }: Assessme
           }
         };
 
+        // Convert complex objects to JSON before inserting
         const { error: resultsError } = await supabase
           .from('assessment_results')
-          .insert([{
+          .insert({
             assessment_id: assessmentId,
             user_id: userId,
-            scores: mockResults.scores,
-            dimensional_balance: mockResults.dimensional_balance,
-            overall_profile: mockResults.overall_profile,
-          }]);
+            scores: JSON.stringify(mockResults.scores) as Json,
+            dimensional_balance: JSON.stringify(mockResults.dimensional_balance) as Json,
+            overall_profile: JSON.stringify(mockResults.overall_profile) as Json,
+          });
 
         if (resultsError) throw resultsError;
 
