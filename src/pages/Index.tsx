@@ -36,13 +36,13 @@ const Index = () => {
             <div className="glass-morphism p-8 rounded-xl overflow-hidden">
               <div className="relative h-[400px] w-full animate-fade-in">
                 <img 
-                  src="/photo-1649972904349-6e44c42644a7" 
-                  alt="Depiction of financial stress and its emotional toll"
+                  src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b" 
+                  alt="Turned on gray laptop computer"
                   className="object-cover w-full h-full rounded-lg opacity-80 hover:opacity-100 transition-opacity duration-300"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent" />
-                <p className="absolute bottom-4 left-4 right-4 text-cream text-lg italic">
-                  "The weight of failed hires impacts more than just your business - it affects your entire life."
+                <p className="absolute bottom-4 left-4 right-4 text-cream text-2xl font-bold">
+                  We Had To Change Our Ways
                 </p>
               </div>
             </div>
