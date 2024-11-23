@@ -108,26 +108,37 @@ const Index = () => {
         <div className="container mx-auto px-6">
           <div className="glass-morphism p-12 rounded-xl hover-lift">
             <h3 className="text-3xl md:text-4xl font-bold mb-8 text-primary">
-              Every Failed Producer Costs You $83,000... And That's Just The Money You Can Count
+              Cost Analysis: Failed Producer Investment
             </h3>
-            <ul className="space-y-6 text-lg opacity-90">
-              <li className="flex items-start space-x-4">
-                <span className="font-semibold min-w-fit">The Problem:</span>
-                <span>Failed producers drain resources, waste training investments, and leave revenue gaps.</span>
-              </li>
-              <li className="flex items-start space-x-4">
-                <span className="font-semibold min-w-fit">The Reality:</span>
-                <span>Beyond salary and benefits, you're burning money on:</span>
-              </li>
-              <li className="pl-8">• Training resources ($15,000+)</li>
-              <li className="pl-8">• Lost opportunities ($30,000+)</li>
-              <li className="pl-8">• Management time ($20,000+)</li>
-              <li className="pl-8">• Recruitment costs ($18,000+)</li>
-              <li className="flex items-start space-x-4 pt-6">
-                <span className="font-semibold min-w-fit">The Cost:</span>
-                <span className="text-secondary font-bold">Your agency's growth stalls while expenses soar.</span>
-              </li>
-            </ul>
+            <div className="space-y-6">
+              <div className="flex flex-col space-y-4">
+                <div className="flex justify-between items-center border-b border-secondary/20 pb-2">
+                  <span className="text-lg">Training & Development Costs</span>
+                  <span className="font-mono text-lg text-secondary">$15,000</span>
+                </div>
+                <div className="flex justify-between items-center border-b border-secondary/20 pb-2">
+                  <span className="text-lg">Lost Revenue Opportunities</span>
+                  <span className="font-mono text-lg text-secondary">$30,000</span>
+                </div>
+                <div className="flex justify-between items-center border-b border-secondary/20 pb-2">
+                  <span className="text-lg">Management Time & Resources</span>
+                  <span className="font-mono text-lg text-secondary">$20,000</span>
+                </div>
+                <div className="flex justify-between items-center border-b border-secondary/20 pb-2">
+                  <span className="text-lg">Recruitment & Onboarding</span>
+                  <span className="font-mono text-lg text-secondary">$18,000</span>
+                </div>
+                <div className="flex justify-between items-center pt-4 border-t-2 border-secondary">
+                  <span className="text-xl font-bold">Total Investment Loss</span>
+                  <span className="font-mono text-xl font-bold text-secondary">$83,000</span>
+                </div>
+              </div>
+              <div className="mt-8 pt-6 border-t border-secondary/20">
+                <p className="text-lg text-primary/80 italic">
+                  "Your agency's growth stalls while expenses soar - every failed hire is a direct hit to your bottom line."
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
