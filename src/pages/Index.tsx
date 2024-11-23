@@ -26,26 +26,43 @@ const Index = () => {
             Sales Killers Are 1 In A 1000
           </h2>
           
-          {/* Core Problems List */}
-          <div className="glass-morphism p-12 rounded-xl mb-16">
-            <ul className="space-y-6 text-xl">
-              <li className="flex items-start space-x-4">
-                <span className="text-secondary">1.</span>
-                <span>Long ramp-up period before producers become profitable (typically 12-18 months)</span>
-              </li>
-              <li className="flex items-start space-x-4">
-                <span className="text-secondary">2.</span>
-                <span>High upfront costs of licensing, training, and guarantees for new producers</span>
-              </li>
-              <li className="flex items-start space-x-4">
-                <span className="text-secondary">3.</span>
-                <span>Risk of investing in candidates who may not succeed in the role</span>
-              </li>
-              <li className="flex items-start space-x-4">
-                <span className="text-secondary">4.</span>
-                <span>Complexity of structuring competitive compensation packages that balance base salary and commissions</span>
-              </li>
-            </ul>
+          <div className="grid md:grid-cols-2 gap-8 mb-16">
+            {/* Graphic */}
+            <div className="glass-morphism p-8 rounded-xl overflow-hidden">
+              <div className="relative h-[400px] w-full animate-fade-in">
+                <img 
+                  src="/photo-1649972904349-6e44c42644a7" 
+                  alt="Depiction of financial stress and its emotional toll"
+                  className="object-cover w-full h-full rounded-lg opacity-80 hover:opacity-100 transition-opacity duration-300"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent" />
+                <p className="absolute bottom-4 left-4 right-4 text-cream text-lg italic">
+                  "The weight of failed hires impacts more than just your business - it affects your entire life."
+                </p>
+              </div>
+            </div>
+
+            {/* Core Problems List */}
+            <div className="glass-morphism p-12 rounded-xl">
+              <ul className="space-y-6 text-xl">
+                <li className="flex items-start space-x-4">
+                  <span className="text-secondary">1.</span>
+                  <span>Long ramp-up period before producers become profitable (typically 12-18 months)</span>
+                </li>
+                <li className="flex items-start space-x-4">
+                  <span className="text-secondary">2.</span>
+                  <span>High upfront costs of licensing, training, and guarantees for new producers</span>
+                </li>
+                <li className="flex items-start space-x-4">
+                  <span className="text-secondary">3.</span>
+                  <span>Risk of investing in candidates who may not succeed in the role</span>
+                </li>
+                <li className="flex items-start space-x-4">
+                  <span className="text-secondary">4.</span>
+                  <span>Complexity of structuring competitive compensation packages that balance base salary and commissions</span>
+                </li>
+              </ul>
+            </div>
           </div>
 
           {/* Consequences Section */}
