@@ -289,6 +289,146 @@ export type Database = {
           },
         ]
       }
+      ml_feature_store: {
+        Row: {
+          feature_name: string
+          feature_value: Json
+          id: string
+          last_updated: string | null
+        }
+        Insert: {
+          feature_name: string
+          feature_value: Json
+          id?: string
+          last_updated?: string | null
+        }
+        Update: {
+          feature_name?: string
+          feature_value?: Json
+          id?: string
+          last_updated?: string | null
+        }
+        Relationships: []
+      }
+      ml_feedback: {
+        Row: {
+          actual_outcome: Json
+          created_at: string | null
+          id: string
+          performance_metrics: Json
+          prediction_id: string | null
+        }
+        Insert: {
+          actual_outcome: Json
+          created_at?: string | null
+          id?: string
+          performance_metrics: Json
+          prediction_id?: string | null
+        }
+        Update: {
+          actual_outcome?: Json
+          created_at?: string | null
+          id?: string
+          performance_metrics?: Json
+          prediction_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ml_feedback_prediction_id_fkey"
+            columns: ["prediction_id"]
+            isOneToOne: false
+            referencedRelation: "ml_predictions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ml_models: {
+        Row: {
+          created_at: string | null
+          id: string
+          metrics: Json
+          parameters: Json
+          status: string
+          version: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          metrics: Json
+          parameters: Json
+          status: string
+          version: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          metrics?: Json
+          parameters?: Json
+          status?: string
+          version?: string
+        }
+        Relationships: []
+      }
+      ml_predictions: {
+        Row: {
+          confidence: number
+          created_at: string | null
+          features: Json
+          id: string
+          input_data: Json
+          model_version: string
+          prediction: Json
+        }
+        Insert: {
+          confidence: number
+          created_at?: string | null
+          features: Json
+          id?: string
+          input_data: Json
+          model_version: string
+          prediction: Json
+        }
+        Update: {
+          confidence?: number
+          created_at?: string | null
+          features?: Json
+          id?: string
+          input_data?: Json
+          model_version?: string
+          prediction?: Json
+        }
+        Relationships: []
+      }
+      ml_system_config: {
+        Row: {
+          batch_size: number
+          created_at: string | null
+          id: string
+          model_version: string
+          prediction_threshold: number
+          update_frequency: number
+          updated_at: string | null
+        }
+        Insert: {
+          batch_size: number
+          created_at?: string | null
+          id?: string
+          model_version: string
+          prediction_threshold: number
+          update_frequency: number
+          updated_at?: string | null
+        }
+        Update: {
+          batch_size?: number
+          created_at?: string | null
+          id?: string
+          model_version?: string
+          prediction_threshold?: number
+          update_frequency?: number
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
