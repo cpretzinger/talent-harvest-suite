@@ -4,6 +4,7 @@ import { vi, describe, it, expect, beforeEach } from 'vitest';
 import { AssessmentManager } from '@/components/assessment/AssessmentManager';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
+import type { PostgrestResponse } from '@supabase/supabase-js';
 
 // Mock the auth context
 vi.mock('@/contexts/AuthContext', () => ({
@@ -16,7 +17,7 @@ vi.mock('@/integrations/supabase/client', () => ({
     from: vi.fn(() => ({
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({ data: null, error: null })
+      single: vi.fn().mockResolvedValue({ data: null, error: null } as PostgrestResponse<any>)
     }))
   }
 }));
@@ -46,7 +47,7 @@ describe('AssessmentManager', () => {
     vi.mocked(supabase.from).mockImplementationOnce(() => ({
       select: vi.fn().mockReturnThis(),
       eq: vi.fn().mockReturnThis(),
-      single: vi.fn().mockResolvedValue({ data: null, error: new Error('Failed to load') })
+      single: vi.fn().mockResolvedValue({ data: null, error: new Error('Failed to load') } as PostgrestResponse<any>)
     }));
 
     render(<AssessmentManager {...defaultProps} />);

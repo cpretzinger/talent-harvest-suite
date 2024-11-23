@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { AssessmentScorer } from '@/utils/AssessmentScorer';
 
 describe('AssessmentScorer', () => {
