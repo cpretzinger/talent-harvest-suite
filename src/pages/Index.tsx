@@ -11,7 +11,7 @@ const Index = () => {
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-5xl md:text-7xl font-bold mb-6 animate-fade-down">
               <span className="bg-gradient-to-r from-primary via-secondary to-cream bg-clip-text text-transparent">
-                Your New Sales Killer <span className="text-secondary">Fast</span>
+                Your New Sales Killer <span className="text-secondary italic">Fast</span>
               </span>
             </h1>
             <RotatingSubheadline />
