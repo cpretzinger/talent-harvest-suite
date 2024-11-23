@@ -1,5 +1,6 @@
 import { AssessmentResponse } from "@/types/assessmentTypes";
 import { AssessmentResult, CategoryScore, DimensionalBalance, Profile, ScoreLevel } from '@/types/assessment';
+import { Json } from '@/types/database/schema';
 
 export class ResultsCalculator {
   // Score weights for different question types
@@ -139,9 +140,9 @@ export class ResultsCalculator {
     return {
       user_id: firstResponse.user_id,
       assessment_id: firstResponse.assessment_id,
-      scores: this.formatCategoryScores({...discScores.natural, ...valuesScores}),
-      dimensional_balance: dimensionalBalance,
-      overall_profile: {
+      scores: this.convertToJson(this.formatCategoryScores({...discScores.natural, ...valuesScores})),
+      dimensional_balance: this.convertToJson(dimensionalBalance),
+      overall_profile: this.convertToJson({
         naturalStyle: discScores.natural,
         adaptiveStyle: discScores.adaptive,
         values: Object.entries(valuesScores).map(([dimension, score]) => ({
@@ -149,8 +150,12 @@ export class ResultsCalculator {
           score,
           description: this.generateInsights({[dimension]: score})[dimension]?.[0] || ''
         }))
-      }
+      })
     };
+  }
+
+  private convertToJson<T>(data: T): Json {
+    return JSON.parse(JSON.stringify(data)) as Json;
   }
 
   private normalizeScores(scores: Record<string, number>): Record<string, number> {

@@ -1,4 +1,5 @@
 import { Tables } from "./database/tables";
+import { Json } from "./database/schema";
 
 export type Question = Tables<"questions"> & {
   options?: string[];
