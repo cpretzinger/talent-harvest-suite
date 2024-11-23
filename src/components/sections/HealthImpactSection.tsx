@@ -4,7 +4,7 @@ export const HealthImpactSection = () => {
   return (
     <div className="grid md:grid-cols-2 gap-8 mt-8">
       {/* Doctor Consultation Visualization */}
-      <div className="glass-morphism p-8 rounded-xl overflow-hidden">
+      <div className="glass-morphism p-8 rounded-xl overflow-hidden flex items-center">
         <div className="relative h-[400px] w-full animate-fade-in">
           <img 
             src="/photo-1649972904349-6e44c42644a7" 
