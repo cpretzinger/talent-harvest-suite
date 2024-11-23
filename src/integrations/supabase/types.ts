@@ -9,6 +9,56 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      assessment_invitations: {
+        Row: {
+          assessment_id: string
+          completed_at: string | null
+          created_at: string
+          current_question_index: number | null
+          email: string
+          first_name: string | null
+          id: string
+          last_name: string | null
+          phone: string | null
+          status: string | null
+          unique_token: string
+        }
+        Insert: {
+          assessment_id: string
+          completed_at?: string | null
+          created_at?: string
+          current_question_index?: number | null
+          email: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          status?: string | null
+          unique_token?: string
+        }
+        Update: {
+          assessment_id?: string
+          completed_at?: string | null
+          created_at?: string
+          current_question_index?: number | null
+          email?: string
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          phone?: string | null
+          status?: string | null
+          unique_token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessment_invitations_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       assessment_results: {
         Row: {
           assessment_id: string

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,6 +7,8 @@ import { Progress } from "@/components/ui/progress";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { QuestionDisplay } from "@/components/assessment/QuestionDisplay";
+import { SendInvitation } from "@/components/assessment/SendInvitation";
+import { useAuth } from "@/contexts/AuthContext";
 import { Tables } from "@/types/database/tables";
 import { AssessmentResponse } from "@/types/assessmentTypes";
 import { ResultsCalculator } from "@/utils/ResultsCalculator";
@@ -15,24 +17,42 @@ type Question = Tables<"questions">;
 
 const Assessment = () => {
   const { id } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
+  const token = searchParams.get('token');
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user, profile } = useAuth();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(3600);
   const resultsCalculator = new ResultsCalculator();
 
+  const { data: invitation } = useQuery({
+    queryKey: ["invitation", token],
+    queryFn: async () => {
+      if (!token) return null;
+      
+      const { data, error } = await supabase
+        .from("assessment_invitations")
+        .select("*")
+        .eq("unique_token", token)
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!token,
+  });
+
+  useEffect(() => {
+    if (invitation?.current_question_index) {
+      setCurrentQuestionIndex(invitation.current_question_index);
+    }
+  }, [invitation]);
+
   const { data: assessment, isLoading: isLoadingAssessment } = useQuery({
     queryKey: ["assessment", id],
     queryFn: async () => {
-      if (!id) {
-        throw new Error("No assessment ID provided");
-      }
-
-      // Validate UUID format
-      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-      if (!uuidRegex.test(id)) {
-        throw new Error("Invalid assessment ID format");
-      }
+      if (!id) throw new Error("No assessment ID provided");
       
       const { data, error } = await supabase
         .from("assessments")
@@ -52,7 +72,6 @@ const Assessment = () => {
         throw error;
       }
       
-      // Transform the data to match Assessment type
       if (data) {
         return {
           ...data,
@@ -71,10 +90,11 @@ const Assessment = () => {
     mutationFn: async (answer: any) => {
       if (!id || !assessment?.questions?.[currentQuestionIndex]) return;
 
-      const mockUserId = "00000000-0000-0000-0000-000000000000";
+      const userId = user?.id || invitation?.id;
+      if (!userId) throw new Error("No user ID available");
 
       const response = {
-        user_id: mockUserId,
+        user_id: userId,
         assessment_id: id,
         question_id: assessment.questions[currentQuestionIndex].id,
         answer,
@@ -85,6 +105,14 @@ const Assessment = () => {
         .insert([response]);
 
       if (error) throw error;
+
+      // Update invitation progress if applicable
+      if (token) {
+        await supabase
+          .from("assessment_invitations")
+          .update({ current_question_index: currentQuestionIndex + 1 })
+          .eq("unique_token", token);
+      }
     },
     onSuccess: () => {
       if (assessment?.questions && currentQuestionIndex < assessment.questions.length - 1) {
@@ -165,6 +193,22 @@ const Assessment = () => {
           <h2 className="text-2xl font-semibold mb-2">Assessment Not Found</h2>
           <p className="text-gray-600">The requested assessment could not be found.</p>
         </div>
+      </div>
+    );
+  }
+
+  // Show invitation form for admins
+  if (profile?.role === "administrator" && !token) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <Card className="max-w-2xl mx-auto">
+          <CardHeader>
+            <CardTitle>Send Assessment Invitation</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SendInvitation assessmentId={id!} />
+          </CardContent>
+        </Card>
       </div>
     );
   }
