@@ -71,39 +71,48 @@ const Index = () => {
           </div>
 
           {/* Consequences Section */}
-          <div className="glass-morphism p-12 rounded-xl">
-            <h3 className="text-3xl font-bold mb-8 text-secondary">Leading to Financial Devastation</h3>
-            <p className="text-xl mb-8 italic">Avoidance compounds the issue, causing:</p>
-            <ul className="space-y-4 text-lg">
-              <li className="flex items-start space-x-4">
-                <span className="text-secondary">•</span>
-                <span>Personal debt accumulation to fund new hire investments</span>
-              </li>
-              <li className="flex items-start space-x-4">
-                <span className="text-secondary">•</span>
-                <span>Delayed personal income and family financial plans</span>
-              </li>
-              <li className="flex items-start space-x-4">
-                <span className="text-secondary">•</span>
-                <span>Stress from supporting non-productive payroll</span>
-              </li>
-              <li className="flex items-start space-x-4">
-                <span className="text-secondary">•</span>
-                <span>Reduced ability to invest in agency growth</span>
-              </li>
-              <li className="flex items-start space-x-4">
-                <span className="text-secondary">•</span>
-                <span>Impact on children's college funds or family investments</span>
-              </li>
-              <li className="flex items-start space-x-4">
-                <span className="text-secondary">•</span>
-                <span>Deteriorating confidence in business decisions</span>
-              </li>
-              <li className="flex items-start space-x-4">
-                <span className="text-secondary">•</span>
-                <span>Strain on personal credit and financial security</span>
-              </li>
-            </ul>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="glass-morphism p-12 rounded-xl">
+              <h3 className="text-3xl font-bold mb-8 text-secondary">Leading to Financial Devastation</h3>
+              <p className="text-xl mb-8 italic">Avoidance compounds the issue, causing:</p>
+              <ul className="space-y-4 text-lg">
+                <li className="flex items-start space-x-4">
+                  <span className="text-secondary">•</span>
+                  <span>Personal debt accumulation to fund new hire investments</span>
+                </li>
+                <li className="flex items-start space-x-4">
+                  <span className="text-secondary">•</span>
+                  <span>Delayed personal income and family financial plans</span>
+                </li>
+                <li className="flex items-start space-x-4">
+                  <span className="text-secondary">•</span>
+                  <span>Stress from supporting non-productive payroll</span>
+                </li>
+                <li className="flex items-start space-x-4">
+                  <span className="text-secondary">•</span>
+                  <span>Reduced ability to invest in agency growth</span>
+                </li>
+                <li className="flex items-start space-x-4">
+                  <span className="text-secondary">•</span>
+                  <span>Impact on children's college funds or family investments</span>
+                </li>
+                <li className="flex items-start space-x-4">
+                  <span className="text-secondary">•</span>
+                  <span>Deteriorating confidence in business decisions</span>
+                </li>
+                <li className="flex items-start space-x-4">
+                  <span className="text-secondary">•</span>
+                  <span>Strain on personal credit and financial security</span>
+                </li>
+              </ul>
+            </div>
+            <div className="glass-morphism p-12 rounded-xl flex items-center justify-center">
+              <img 
+                src="https://images.unsplash.com/photo-1721322800607-8c38375eef04"
+                alt="Financial stress visualization"
+                className="w-full h-auto max-h-[500px] object-cover rounded-lg opacity-80 hover:opacity-100 transition-opacity duration-300"
+              />
+            </div>
           </div>
         </div>
       </section>
