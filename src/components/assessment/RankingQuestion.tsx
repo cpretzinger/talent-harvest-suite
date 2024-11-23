@@ -2,7 +2,9 @@ import { Question } from "@/types/assessment";
 import { Button } from "@/components/ui/button";
 
 interface RankingQuestionProps {
-  question: Question;
+  question: Question & {
+    options: string[];
+  };
   onAnswer: (ranking: number[]) => void;
 }
 

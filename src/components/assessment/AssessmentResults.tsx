@@ -1,13 +1,21 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { AssessmentResult } from "@/types/assessment";
 import { DISCChart } from "./DISCChart";
+import { StylePattern, ValuesDimension } from "@/types/assessment";
 
 interface AssessmentResultsProps {
-  results: AssessmentResult;
+  results: {
+    overall_profile: {
+      naturalStyle: StylePattern;
+      adaptiveStyle: StylePattern;
+      values: ValuesDimension[];
+    };
+  };
 }
 
 export const AssessmentResults = ({ results }: AssessmentResultsProps) => {
+  const { naturalStyle, adaptiveStyle, values } = results.overall_profile;
+  
   return (
     <div className="space-y-6">
       <Card>
@@ -18,11 +26,11 @@ export const AssessmentResults = ({ results }: AssessmentResultsProps) => {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <h3 className="font-medium">Natural Style</h3>
-              <DISCChart data={results.naturalStyle} />
+              <DISCChart data={naturalStyle} />
             </div>
             <div>
               <h3 className="font-medium">Adaptive Style</h3>
-              <DISCChart data={results.adaptiveStyle} />
+              <DISCChart data={adaptiveStyle} />
             </div>
           </div>
         </CardContent>
@@ -34,7 +42,7 @@ export const AssessmentResults = ({ results }: AssessmentResultsProps) => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {results.values.map((value) => (
+            {values.map((value) => (
               <div key={value.dimension} className="space-y-2">
                 <div className="flex justify-between">
                   <span className="font-medium">{value.dimension}</span>

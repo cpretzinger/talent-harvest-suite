@@ -2,7 +2,9 @@ import { Question } from "@/types/assessment";
 import { Button } from "@/components/ui/button";
 
 interface MultipleChoiceQuestionProps {
-  question: Question;
+  question: Question & {
+    options: string[];
+  };
   onAnswer: (choice: string) => void;
 }
 

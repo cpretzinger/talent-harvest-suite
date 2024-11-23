@@ -1,6 +1,8 @@
 import { Tables } from "./database/tables";
 
-export type Question = Tables<"questions">;
+export type Question = Tables<"questions"> & {
+  options?: string[];
+};
 export type Assessment = Tables<"assessments">;
 export type AssessmentResult = Tables<"assessment_results">;
 export type Response = Tables<"responses">;
