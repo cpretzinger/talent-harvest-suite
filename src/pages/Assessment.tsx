@@ -5,11 +5,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Loader2 } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { QuestionDisplay } from "@/components/assessment/QuestionDisplay";
 import { Tables } from "@/types/database/tables";
 import { AssessmentResponse } from "@/types/assessmentTypes";
-import { calculateScores, calculateDimensionalBalance, calculateOverallProfile } from "@/utils/assessmentCalculations";
+import { ResultsCalculator } from "@/utils/ResultsCalculator";
 
 type Question = Tables<"questions">;
 
@@ -19,6 +19,7 @@ const Assessment = () => {
   const { toast } = useToast();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(3600);
+  const resultsCalculator = new ResultsCalculator();
 
   const { data: assessment, isLoading: isLoadingAssessment } = useQuery({
     queryKey: ["assessment", id],
@@ -89,28 +90,25 @@ const Assessment = () => {
     try {
       const mockUserId = "00000000-0000-0000-0000-000000000000";
 
-      const { data: responsesData } = await supabase
+      const { data: responsesData, error: responsesError } = await supabase
         .from("responses")
         .select("*")
         .eq("assessment_id", id)
         .eq("user_id", mockUserId);
 
+      if (responsesError) throw responsesError;
+
       // Cast the responses to the correct type
       const responses = (responsesData || []) as AssessmentResponse[];
 
-      const result = {
-        user_id: mockUserId,
-        assessment_id: id,
-        scores: calculateScores(responses),
-        dimensional_balance: calculateDimensionalBalance(responses),
-        overall_profile: calculateOverallProfile(responses),
-      };
+      // Calculate results using the ResultsCalculator
+      const result = resultsCalculator.generateFullReport(responses);
 
-      const { error } = await supabase
+      const { error: resultsError } = await supabase
         .from("assessment_results")
         .insert([result]);
 
-      if (error) throw error;
+      if (resultsError) throw resultsError;
 
       toast({
         title: "Assessment Completed",
