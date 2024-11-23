@@ -119,25 +119,21 @@ const Index = () => {
         <div className="container mx-auto px-6">
           <div className="glass-morphism p-12 rounded-xl hover-lift">
             <h3 className="text-3xl md:text-4xl font-bold mb-8">
-              Our Problem
+              Our Problem: Our agency owned us and we hated that.
             </h3>
             <ul className="space-y-6 text-lg opacity-90">
               <li className="flex items-start space-x-4">
-                <span className="font-semibold min-w-fit">Our Problem:</span>
-                <span>Your agency owns you instead of you owning your agency.</span>
+                <span className="font-semibold min-w-fit">The Reality:</span>
+                <span>We HAD to do something different even though it felt impossible.</span>
               </li>
               <li className="flex items-start space-x-4">
-                <span className="font-semibold min-w-fit">The Reality:</span>
-                <span>You're stuck in an endless loop of:</span>
+                <span className="font-semibold min-w-fit">Our hair turned gray from these, nod if they sound familiar:</span>
               </li>
-              <li className="pl-8">• Rushed hiring decisions</li>
-              <li className="pl-8">• Repetitive onboarding</li>
-              <li className="pl-8">• Performance management</li>
-              <li className="pl-8">• Starting over... again</li>
-              <li className="flex items-start space-x-4 pt-6">
-                <span className="font-semibold min-w-fit">The Cost:</span>
-                <span className="text-secondary font-bold">Your dream of scaling becomes your daily nightmare.</span>
-              </li>
+              <li className="pl-8">• Maintaining consistent production levels across varying experience levels</li>
+              <li className="pl-8">• High turnover rates in the first two years of employment</li>
+              <li className="pl-8">• Balancing producer autonomy with agency standards and procedures</li>
+              <li className="pl-8">• Keeping producers motivated and engaged during the extended sales cycle</li>
+              <li className="pl-8">• Managing performance expectations while building a book of business</li>
             </ul>
           </div>
         </div>
