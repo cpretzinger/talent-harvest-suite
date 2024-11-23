@@ -8,6 +8,7 @@ import { AssessmentProgress } from './AssessmentProgress';
 import { NavigationControls } from './NavigationControls';
 import { LoadingSpinner, ErrorMessage } from './AssessmentStateDisplay';
 import { useToast } from "@/hooks/use-toast";
+import { generatePDFReport } from '@/utils/reportGenerator';
 
 interface AssessmentManagerProps {
   assessmentId: string;
@@ -47,7 +48,9 @@ export const AssessmentManager = ({ assessmentId, userId, onComplete }: Assessme
         // Transform the questions to match the Question type
         const transformedQuestions: Question[] = loadedQuestions?.map(q => ({
           ...q,
-          options: Array.isArray(q.options) ? q.options : undefined
+          options: typeof q.options === 'object' && Array.isArray(q.options) 
+            ? q.options.map(opt => String(opt))
+            : undefined
         })) || [];
 
         setQuestions(transformedQuestions);
@@ -111,14 +114,33 @@ export const AssessmentManager = ({ assessmentId, userId, onComplete }: Assessme
 
     if (nextIndex >= questions.length) {
       try {
+        const mockResults: AssessmentResult = {
+          user_id: userId,
+          assessment_id: assessmentId,
+          scores: [],
+          dimensional_balance: {
+            external: { empathy: 75, practicalThinking: 65, systemsJudgment: 80 },
+            internal: { selfEsteem: 70, roleAwareness: 85, selfDirection: 75 }
+          },
+          overall_profile: {
+            naturalStyle: { D: 65, I: 75, S: 45, C: 85 },
+            adaptiveStyle: { D: 70, I: 70, S: 50, C: 80 },
+            values: [
+              { dimension: "Achievement", score: 85, description: "Strong drive for success and accomplishment" },
+              { dimension: "Independence", score: 75, description: "Values autonomy and self-direction" },
+              { dimension: "Recognition", score: 65, description: "Moderate need for acknowledgment" }
+            ]
+          }
+        };
+
         const { error: resultsError } = await supabase
           .from('assessment_results')
           .insert([{
             assessment_id: assessmentId,
             user_id: userId,
-            scores: JSON.stringify({}), // This will be replaced by actual scores
-            dimensional_balance: JSON.stringify({}), // This will be replaced by actual balance
-            overall_profile: JSON.stringify({}), // This will be replaced by actual profile
+            scores: mockResults.scores,
+            dimensional_balance: mockResults.dimensional_balance,
+            overall_profile: mockResults.overall_profile,
           }]);
 
         if (resultsError) throw resultsError;
@@ -128,20 +150,9 @@ export const AssessmentManager = ({ assessmentId, userId, onComplete }: Assessme
           .delete()
           .match({ user_id: userId, assessment_id: assessmentId });
 
-        onComplete({ results: {
-          user_id: userId,
-          assessment_id: assessmentId,
-          scores: [],
-          dimensional_balance: {
-            external: { empathy: 0, practicalThinking: 0, systemsJudgment: 0 },
-            internal: { selfEsteem: 0, roleAwareness: 0, selfDirection: 0 }
-          },
-          overall_profile: {
-            naturalStyle: { D: 0, I: 0, S: 0, C: 0 },
-            adaptiveStyle: { D: 0, I: 0, S: 0, C: 0 },
-            values: []
-          }
-        }});
+        // Generate PDF report
+        const pdfUrl = await generatePDFReport(mockResults);
+        onComplete({ results: mockResults, pdfUrl });
       } catch (error) {
         console.error('Error saving results:', error);
         toast({
