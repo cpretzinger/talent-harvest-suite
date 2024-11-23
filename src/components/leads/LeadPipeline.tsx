@@ -26,7 +26,13 @@ interface Lead {
   first_name: string;
   last_name: string;
   email: string;
+  phone: string | null;
+  status: string;
+  source: string | null;
   pipeline_stage: string;
+  notes?: string[];
+  communication_history?: any[];
+  tasks?: any[];
 }
 
 export function LeadPipeline({ leads }: { leads: Lead[] }) {
