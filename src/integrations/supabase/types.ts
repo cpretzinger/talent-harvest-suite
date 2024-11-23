@@ -9,6 +9,56 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      assessments: {
+        Row: {
+          candidate_id: string | null
+          completed_at: string | null
+          completion_time: number | null
+          created_at: string | null
+          id: string
+          personality_profile: Json | null
+          questions: Json | null
+          responses: Json | null
+          score: number | null
+          started_at: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          candidate_id?: string | null
+          completed_at?: string | null
+          completion_time?: number | null
+          created_at?: string | null
+          id?: string
+          personality_profile?: Json | null
+          questions?: Json | null
+          responses?: Json | null
+          score?: number | null
+          started_at?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          candidate_id?: string | null
+          completed_at?: string | null
+          completion_time?: number | null
+          created_at?: string | null
+          id?: string
+          personality_profile?: Json | null
+          questions?: Json | null
+          responses?: Json | null
+          score?: number | null
+          started_at?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessments_candidate_id_fkey"
+            columns: ["candidate_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       documents: {
         Row: {
           created_at: string | null
