@@ -1,3 +1,10 @@
+import { Tables } from "./database/tables";
+
+export type Question = Tables<"questions">;
+export type Assessment = Tables<"assessments">;
+export type AssessmentResult = Tables<"assessment_results">;
+export type Response = Tables<"responses">;
+
 export type QuestionType = 'likert' | 'ranking' | 'multiple_choice';
 
 export type AssessmentCategory = 
@@ -12,23 +19,6 @@ export type AssessmentCategory =
   | 'Altruist'
   | 'Regulatory'
   | 'Theoretical';
-
-export interface Question {
-  id: string;
-  text: string;
-  category: AssessmentCategory;
-  subCategory?: string;
-  type: QuestionType;
-  options?: string[];
-  weight: number;
-}
-
-export interface Assessment {
-  id: string;
-  title: string;
-  description?: string;
-  questions: Question[];
-}
 
 export interface StylePattern {
   D: number;
@@ -58,10 +48,4 @@ export interface DimensionalBalance {
 export interface CategoryScore {
   category: string;
   score: number;
-}
-
-export interface AssessmentResult {
-  naturalStyle: StylePattern;
-  adaptiveStyle: StylePattern;
-  values: ValuesDimension[];
 }

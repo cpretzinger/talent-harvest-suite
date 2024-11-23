@@ -9,73 +9,74 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      assessments: {
+      assessment_results: {
         Row: {
-          candidate_id: string | null
-          categories: Json[] | null
-          category_scores: Json[] | null
-          completed_at: string | null
-          completion_time: number | null
-          created_at: string | null
-          description: string | null
-          dimensional_balance: Json | null
+          assessment_id: string
+          created_at: string
+          dimensional_balance: Json
           id: string
-          overall_profile: Json | null
-          personality_profile: Json | null
-          questions: Json | null
-          responses: Json | null
-          score: number | null
-          started_at: string | null
-          title: string | null
-          updated_at: string | null
+          overall_profile: Json
+          scores: Json
+          user_id: string
         }
         Insert: {
-          candidate_id?: string | null
-          categories?: Json[] | null
-          category_scores?: Json[] | null
-          completed_at?: string | null
-          completion_time?: number | null
-          created_at?: string | null
-          description?: string | null
-          dimensional_balance?: Json | null
+          assessment_id: string
+          created_at?: string
+          dimensional_balance: Json
           id?: string
-          overall_profile?: Json | null
-          personality_profile?: Json | null
-          questions?: Json | null
-          responses?: Json | null
-          score?: number | null
-          started_at?: string | null
-          title?: string | null
-          updated_at?: string | null
+          overall_profile: Json
+          scores: Json
+          user_id: string
         }
         Update: {
-          candidate_id?: string | null
-          categories?: Json[] | null
-          category_scores?: Json[] | null
-          completed_at?: string | null
-          completion_time?: number | null
-          created_at?: string | null
-          description?: string | null
-          dimensional_balance?: Json | null
+          assessment_id?: string
+          created_at?: string
+          dimensional_balance?: Json
           id?: string
-          overall_profile?: Json | null
-          personality_profile?: Json | null
-          questions?: Json | null
-          responses?: Json | null
-          score?: number | null
-          started_at?: string | null
-          title?: string | null
-          updated_at?: string | null
+          overall_profile?: Json
+          scores?: Json
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "assessments_candidate_id_fkey"
-            columns: ["candidate_id"]
+            foreignKeyName: "assessment_results_assessment_id_fkey"
+            columns: ["assessment_id"]
             isOneToOne: false
-            referencedRelation: "leads"
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assessment_results_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
+      }
+      assessments: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
       }
       documents: {
         Row: {
@@ -217,6 +218,120 @@ export type Database = {
           last_name?: string | null
           role?: Database["public"]["Enums"]["user_role"]
           updated_at?: string
+        }
+        Relationships: []
+      }
+      questions: {
+        Row: {
+          assessment_id: string
+          category: string
+          created_at: string
+          id: string
+          options: Json | null
+          sub_category: string | null
+          text: string
+          type: string
+          weight: number
+        }
+        Insert: {
+          assessment_id: string
+          category: string
+          created_at?: string
+          id?: string
+          options?: Json | null
+          sub_category?: string | null
+          text: string
+          type: string
+          weight?: number
+        }
+        Update: {
+          assessment_id?: string
+          category?: string
+          created_at?: string
+          id?: string
+          options?: Json | null
+          sub_category?: string | null
+          text?: string
+          type?: string
+          weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "questions_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      responses: {
+        Row: {
+          answer: Json
+          assessment_id: string
+          created_at: string
+          id: string
+          question_id: string
+          user_id: string
+        }
+        Insert: {
+          answer: Json
+          assessment_id: string
+          created_at?: string
+          id?: string
+          question_id: string
+          user_id: string
+        }
+        Update: {
+          answer?: Json
+          assessment_id?: string
+          created_at?: string
+          id?: string
+          question_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "responses_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "responses_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "questions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "responses_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      users: {
+        Row: {
+          created_at: string
+          email: string
+          full_name: string | null
+          id: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          full_name?: string | null
+          id: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          full_name?: string | null
+          id?: string
         }
         Relationships: []
       }
