@@ -153,22 +153,6 @@ const Index = () => {
       {/* Timeline Chart Section */}
       <section className="py-20 bg-cream">
         <div className="container mx-auto px-6">
-          <div className="grid md:grid-cols-2 gap-8 mt-8">
-            <div className="glass-morphism p-8 rounded-xl">
-              <h3 className="text-2xl font-bold mb-6 text-primary">Agency Timeline</h3>
-              <AgencyTimelineChart />
-            </div>
-
-            {/* Why We Made It A Must Section */}
-            <div className="glass-morphism p-8 rounded-xl">
-              <h3 className="text-2xl font-bold mb-6 text-primary">Why We Made It A Must:</h3>
-              <BrickWall />
-              <p className="text-xl text-secondary font-bold text-center mt-6">
-                The Writing Was On the Wall!
-              </p>
-            </div>
-          </div>
-
           {/* Duplicate Timeline Chart */}
           <div className="grid md:grid-cols-2 gap-8 mt-8">
             <div className="glass-morphism p-8 rounded-xl">
