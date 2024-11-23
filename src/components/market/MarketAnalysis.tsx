@@ -1,50 +1,13 @@
-import React, { useState } from "react";
-import { Trash as TrashIcon } from "lucide-react";
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  Tooltip, 
-  Legend, 
-  ResponsiveContainer,
-  ScatterChart,
-  Scatter
-} from "recharts";
+import React, { useState } from 'react';
+import { Trash as TrashIcon } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-
-interface MarketMetrics {
-  demographics: {
-    population: number;
-    medianAge: number;
-    medianIncome: number;
-    householdSize: number;
-    educationLevel: Record<string, number>;
-  };
-  insurance: {
-    penetration: number;
-    averagePremium: number;
-    lapsedPolicies: number;
-    marketSize: number;
-  };
-  competition: {
-    agentDensity: number;
-    carrierCount: number;
-    marketShare: Record<string, number>;
-    averageProduction: number;
-  };
-  growth: {
-    populationGrowth: number;
-    incomeGrowth: number;
-    businessGrowth: number;
-    developmentIndex: number;
-  };
-}
+import { Market, MarketMetrics, MarketSelectorProps } from '@/types/market';
+import { PopulationChart } from './charts/PopulationChart';
+import { PenetrationChart } from './charts/PenetrationChart';
 
 // Utility function to calculate opportunity score
 const calculateOpportunityScore = (metrics: MarketMetrics) => {
@@ -58,7 +21,7 @@ const calculateOpportunityScore = (metrics: MarketMetrics) => {
 };
 
 // Utility function to generate recommendations
-const generateRecommendations = (market: any, metrics: MarketMetrics) => {
+const generateRecommendations = (market: Market, metrics: MarketMetrics) => {
   const recommendations = [];
   const score = calculateOpportunityScore(metrics);
 
@@ -73,32 +36,6 @@ const generateRecommendations = (market: any, metrics: MarketMetrics) => {
   return recommendations;
 };
 
-// Market Toolbar Component
-const MarketToolbar: React.FC<{
-  selectedMarkets: string[];
-  comparisonType: 'overview' | 'detailed' | 'opportunity';
-  onTypeChange: (type: 'overview' | 'detailed' | 'opportunity') => void;
-  dateRange: [Date, Date];
-  onDateRangeChange: (range: [Date, Date]) => void;
-}> = ({
-  comparisonType,
-  onTypeChange,
-  dateRange,
-  onDateRangeChange
-}) => {
-  return (
-    <div className="flex justify-between items-center mb-6">
-      <Tabs value={comparisonType} onValueChange={(value: any) => onTypeChange(value)}>
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="detailed">Detailed</TabsTrigger>
-          <TabsTrigger value="opportunity">Opportunity</TabsTrigger>
-        </TabsList>
-      </Tabs>
-    </div>
-  );
-};
-
 // Market Selector Component
 const MarketSelector: React.FC<MarketSelectorProps> = ({ 
   selectedMarkets, 
@@ -108,13 +45,36 @@ const MarketSelector: React.FC<MarketSelectorProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState<Market[]>([]);
 
+  const handleSearchMarkets = async (term: string) => {
+    if (term.length < 2) {
+      setSuggestions([]);
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('market_data')
+      .select('id, market_name')
+      .ilike('market_name', `%${term}%`)
+      .limit(10);
+
+    if (error) {
+      console.error('Error searching markets:', error);
+      return;
+    }
+
+    setSuggestions(data.map(d => ({
+      id: d.id,
+      name: d.market_name,
+      state: 'N/A' // Add proper state handling if needed
+    })));
+  };
+
   return (
     <div className="bg-white rounded-lg shadow p-4">
       <div className="space-y-4">
-        <input
+        <Input
           type="text"
           placeholder="Search markets..."
-          className="input input-bordered w-full"
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
@@ -160,148 +120,104 @@ const MarketSelector: React.FC<MarketSelectorProps> = ({
   );
 };
 
-// MetricCard Component
-const MetricCard: React.FC<{
-  title: string;
-  chart: React.ReactNode;
-}> = ({ title, chart }) => {
-  return (
-    <Card className="p-4">
-      <h3 className="text-lg font-semibold mb-4">{title}</h3>
-      {chart}
-    </Card>
-  );
-};
+// Main Market Comparison Component
+export const MarketComparisonTool = () => {
+  const [selectedMarkets, setSelectedMarkets] = useState<Market[]>([]);
+  const [comparisonType, setComparisonType] = useState<'overview' | 'detailed' | 'opportunity'>('overview');
+  const [dateRange, setDateRange] = useState<[Date, Date]>([new Date(), new Date()]);
 
-// Comparison View Component
-const ComparisonView: React.FC<ComparisonViewProps> = ({
-  type,
-  markets,
-  metrics,
-  dateRange
-}) => {
-  switch (type) {
-    case 'overview':
-      return <MarketOverview markets={markets} metrics={metrics} />;
-    case 'detailed':
-      return <DetailedComparison markets={markets} metrics={metrics} dateRange={dateRange} />;
-    case 'opportunity':
-      return <OpportunityAnalysis markets={markets} metrics={metrics} />;
-    default:
-      return null;
-  }
-};
+  const { data: metrics } = useQuery({
+    queryKey: ['marketMetrics', selectedMarkets.map(m => m.id)],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('market_data')
+        .select('*')
+        .in('id', selectedMarkets.map(m => m.id));
 
-// Market Overview Component
-const MarketOverview: React.FC<MarketOverviewProps> = ({ markets, metrics }) => {
+      if (error) throw error;
+      return data.reduce((acc, market) => ({
+        ...acc,
+        [market.id]: {
+          demographics: {
+            population: market.population,
+            medianAge: 0,
+            medianIncome: market.median_income,
+            householdSize: 0,
+            educationLevel: {}
+          },
+          insurance: {
+            penetration: market.insurance_penetration,
+            averagePremium: 0,
+            lapsedPolicies: 0,
+            marketSize: 0
+          },
+          competition: {
+            agentDensity: market.competitor_density,
+            carrierCount: 0,
+            marketShare: {},
+            averageProduction: 0
+          },
+          growth: {
+            populationGrowth: 0,
+            incomeGrowth: 0,
+            businessGrowth: 0,
+            developmentIndex: market.growth_rate
+          }
+        }
+      }), {});
+    },
+    enabled: selectedMarkets.length > 0
+  });
+
+  const handleMarketSelect = (market: Market) => {
+    setSelectedMarkets(prev => [...prev, market]);
+  };
+
+  const handleMarketRemove = (market: Market) => {
+    setSelectedMarkets(prev => prev.filter(m => m.id !== market.id));
+  };
+
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-2 gap-4">
-        <MetricCard
-          title="Population Distribution"
-          chart={
-            <PopulationChart
-              data={markets.map(m => ({
-                market: m.name,
-                population: metrics[m.id].demographics.population,
-                growth: metrics[m.id].growth.populationGrowth
-              }))}
-            />
-          }
-        />
-
-        <MetricCard
-          title="Insurance Penetration"
-          chart={
-            <PenetrationChart
-              data={markets.map(m => ({
-                market: m.name,
-                penetration: metrics[m.id].insurance.penetration,
-                premium: metrics[m.id].insurance.averagePremium
-              }))}
-            />
-          }
-        />
+      <div className="flex justify-between items-center">
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList>
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="detailed">Detailed</TabsTrigger>
+            <TabsTrigger value="opportunity">Opportunity</TabsTrigger>
+          </TabsList>
+          <TabsContent value="overview">
+            <div className="grid grid-cols-2 gap-4">
+              <Card className="p-4">
+                <h3 className="text-lg font-semibold mb-4">Population Distribution</h3>
+                {metrics && <PopulationChart data={selectedMarkets.map(m => ({
+                  market: m.name,
+                  population: metrics[m.id]?.demographics.population,
+                  growth: metrics[m.id]?.growth.populationGrowth
+                }))} />}
+              </Card>
+              <Card className="p-4">
+                <h3 className="text-lg font-semibold mb-4">Insurance Penetration</h3>
+                {metrics && <PenetrationChart data={selectedMarkets.map(m => ({
+                  market: m.name,
+                  penetration: metrics[m.id]?.insurance.penetration,
+                  premium: metrics[m.id]?.insurance.averagePremium
+                }))} />}
+              </Card>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
 
-      <CompetitionMatrix markets={markets} metrics={metrics} />
-      <GrowthPotentialChart markets={markets} metrics={metrics} />
-    </div>
-  );
-};
-
-// Detailed Comparison Component
-const DetailedComparison: React.FC<DetailedComparisonProps> = ({
-  markets,
-  metrics,
-  dateRange
-}) => {
-  return (
-    <div className="space-y-6">
-      <TabGroup>
-        <Tab label="Demographics">
-          <DemographicsComparison markets={markets} metrics={metrics} />
-        </Tab>
-        <Tab label="Insurance Metrics">
-          <InsuranceMetricsComparison markets={markets} metrics={metrics} />
-        </Tab>
-        <Tab label="Competition">
-          <CompetitionAnalysis markets={markets} metrics={metrics} />
-        </Tab>
-        <Tab label="Growth Trends">
-          <GrowthTrendAnalysis 
-            markets={markets} 
-            metrics={metrics}
-            dateRange={dateRange}
+      <div className="grid grid-cols-12 gap-6">
+        <div className="col-span-3">
+          <MarketSelector
+            selectedMarkets={selectedMarkets}
+            onMarketSelect={handleMarketSelect}
+            onMarketRemove={handleMarketRemove}
           />
-        </Tab>
-      </TabGroup>
-    </div>
-  );
-};
-
-// Opportunity Analysis Component
-const OpportunityAnalysis: React.FC<OpportunityAnalysisProps> = ({
-  markets,
-  metrics
-}) => {
-  return (
-    <div className="space-y-6">
-      <OpportunityScorecard markets={markets} metrics={metrics} />
-      <MarketPotentialMatrix markets={markets} metrics={metrics} />
-      <RecommendationsList markets={markets} metrics={metrics} />
-    </div>
-  );
-};
-
-// Competition Matrix Component
-const CompetitionMatrix: React.FC<{
-  markets: any[];
-  metrics: Record<string, MarketMetrics>;
-}> = ({ markets, metrics }) => {
-  return (
-    <Card className="p-6">
-      <h3 className="text-lg font-semibold mb-4">Competition Matrix</h3>
-      <div className="h-64">
-        <ResponsiveContainer width="100%" height="100%">
-          <ScatterChart>
-            <XAxis dataKey="agentDensity" name="Agent Density" />
-            <YAxis dataKey="marketShare" name="Market Share" unit="%" />
-            <Tooltip />
-            <Scatter
-              data={markets.map(m => ({
-                name: m.name,
-                agentDensity: metrics[m.id].competition.agentDensity,
-                marketShare: Object.values(metrics[m.id].competition.marketShare)[0]
-              }))}
-              fill="#8884d8"
-            />
-          </ScatterChart>
-        </ResponsiveContainer>
+        </div>
       </div>
-    </Card>
+    </div>
   );
 };
-
-// Export the main component
-export { MarketComparisonTool };
