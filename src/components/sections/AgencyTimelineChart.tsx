@@ -1,5 +1,5 @@
 import React from "react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts";
 
 const data = [
   { year: 1, redLine: 50, greenLine: 50 },
@@ -72,18 +72,6 @@ export const AgencyTimelineChart = () => {
               return '';
             }}
             tick={{ fill: '#26361C', fontSize: 12 }}
-          />
-          <Tooltip 
-            contentStyle={{ 
-              backgroundColor: '#26361C', 
-              border: 'none', 
-              borderRadius: '8px',
-              fontSize: '12px',
-              fontWeight: 500,
-              padding: '8px'
-            }}
-            labelStyle={{ color: '#FEFAE2', fontWeight: 600 }}
-            itemStyle={{ color: '#FEFAE2' }}
           />
           <Line 
             yAxisId="left"
