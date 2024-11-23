@@ -8,9 +8,9 @@ import { Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import { QuestionDisplay } from "@/components/assessment/QuestionDisplay";
 import { Tables } from "@/types/database/tables";
+import { AssessmentResponse } from "@/types/assessmentTypes";
 
 type Question = Tables<"questions">;
-type Response = Tables<"responses">;
 
 const Assessment = () => {
   const { id } = useParams();
@@ -150,7 +150,7 @@ const Assessment = () => {
   );
 };
 
-const calculateScores = (responses: Response[]) => {
+const calculateScores = (responses: AssessmentResponse[]) => {
   const scores: Record<string, number> = {};
   
   responses.forEach(response => {
@@ -163,7 +163,7 @@ const calculateScores = (responses: Response[]) => {
   return scores;
 };
 
-const calculateDimensionalBalance = (responses: Response[]) => {
+const calculateDimensionalBalance = (responses: AssessmentResponse[]) => {
   const external = {
     empathy: 0,
     practicalThinking: 0,
@@ -192,7 +192,7 @@ const calculateDimensionalBalance = (responses: Response[]) => {
   return { external, internal };
 };
 
-const calculateOverallProfile = (responses: Response[]) => {
+const calculateOverallProfile = (responses: AssessmentResponse[]) => {
   const naturalStyle = { D: 0, I: 0, S: 0, C: 0 };
   const adaptiveStyle = { D: 0, I: 0, S: 0, C: 0 };
   const values: { dimension: string; score: number; description: string }[] = [];
