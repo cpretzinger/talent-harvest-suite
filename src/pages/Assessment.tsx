@@ -108,8 +108,8 @@ const Assessment = () => {
           user_id: mockUserId,
           assessment_id: id,
           scores: result.scores,
-          dimensional_balance: result.dimensionalBalance,
-          overall_profile: result.overallProfile
+          dimensional_balance: result.dimensional_balance,
+          overall_profile: result.overall_profile
         }]);
 
       if (resultsError) throw resultsError;

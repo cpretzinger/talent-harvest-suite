@@ -1,5 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
-import { Question, Assessment, AssessmentResult, Profile, CategoryScore, ScoreLevel } from "@/types/assessment";
+import { Question, Assessment, AssessmentResult } from "@/types/assessment";
 
 export class AssessmentAPI {
   async getAssessment(assessmentId: string): Promise<Assessment | null> {
@@ -44,14 +44,18 @@ export class AssessmentAPI {
       .insert({
         user_id: userId,
         assessment_id: assessmentId,
-        scores: results.scores,
-        dimensional_balance: results.dimensional_balance,
-        overall_profile: results.overall_profile
+        scores: this.convertToJson(results.scores),
+        dimensional_balance: this.convertToJson(results.dimensional_balance),
+        overall_profile: this.convertToJson(results.overall_profile)
       });
 
     if (resultsError) throw resultsError;
 
     return results;
+  }
+
+  private convertToJson(data: any): any {
+    return JSON.parse(JSON.stringify(data));
   }
 
   private async calculateResults(
@@ -111,7 +115,7 @@ export class AssessmentAPI {
     };
   }
 
-  private calculateScoreLevel(score: number): ScoreLevel {
+  private calculateScoreLevel(score: number): string {
     if (score >= 9) return 'Excellent';
     if (score >= 8) return 'Very Good';
     if (score >= 7) return 'Good';
