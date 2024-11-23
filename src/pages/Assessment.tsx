@@ -12,7 +12,7 @@ import { AssessmentResults } from "@/components/assessment/AssessmentResults";
 import { Question } from "@/types/assessment";
 import { Tables } from "@/integrations/supabase/types";
 
-interface AssessmentData extends Tables<"assessments"> {
+interface AssessmentData extends Omit<Tables<"assessments">, "questions"> {
   questions: Question[];
 }
 
@@ -27,6 +27,8 @@ const Assessment = () => {
   const { data: assessment, isLoading } = useQuery({
     queryKey: ["assessment", id],
     queryFn: async () => {
+      if (!id) throw new Error("No assessment ID provided");
+      
       const { data, error } = await supabase
         .from("assessments")
         .select("*")
@@ -53,6 +55,7 @@ const Assessment = () => {
         questions
       } as AssessmentData;
     },
+    enabled: !!id,
   });
 
   useEffect(() => {

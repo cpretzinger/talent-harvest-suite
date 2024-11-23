@@ -43,6 +43,23 @@ export interface ValuesDimension {
   description: string;
 }
 
+export interface Profile {
+  naturalStyle: StylePattern;
+  adaptiveStyle: StylePattern;
+  values: ValuesDimension[];
+}
+
+export interface DimensionalBalance {
+  primary: string;
+  secondary: string;
+  score: number;
+}
+
+export interface CategoryScore {
+  category: string;
+  score: number;
+}
+
 export interface AssessmentResult {
   naturalStyle: StylePattern;
   adaptiveStyle: StylePattern;

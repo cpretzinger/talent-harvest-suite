@@ -1,10 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Profile, ValuesDimension } from "@/types/assessment";
+import { AssessmentResult } from "@/types/assessment";
 import { DISCChart } from "./DISCChart";
 
 interface AssessmentResultsProps {
-  results: Profile;
+  results: AssessmentResult;
 }
 
 export const AssessmentResults = ({ results }: AssessmentResultsProps) => {
@@ -34,7 +34,7 @@ export const AssessmentResults = ({ results }: AssessmentResultsProps) => {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {results.values.map((value: ValuesDimension) => (
+            {results.values.map((value) => (
               <div key={value.dimension} className="space-y-2">
                 <div className="flex justify-between">
                   <span className="font-medium">{value.dimension}</span>
