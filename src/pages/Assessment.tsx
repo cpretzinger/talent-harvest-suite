@@ -8,12 +8,26 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
+interface Question {
+  question: string;
+  options: string[];
+}
+
+interface AssessmentData {
+  id: string;
+  questions: Question[] | null;
+  responses: Record<string, any> | null;
+  started_at: string | null;
+  completed_at: string | null;
+  completion_time: number | null;
+}
+
 const Assessment = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [timeRemaining, setTimeRemaining] = useState(3600); // 1 hour in seconds
+  const [timeRemaining, setTimeRemaining] = useState(3600);
   const [responses, setResponses] = useState<Record<string, any>>({});
 
   const { data: assessment, isLoading } = useQuery({
@@ -26,7 +40,7 @@ const Assessment = () => {
         .single();
 
       if (error) throw error;
-      return data;
+      return data as AssessmentData;
     },
   });
 
@@ -62,7 +76,7 @@ const Assessment = () => {
   };
 
   const handleNext = () => {
-    if (currentQuestion < (assessment?.questions?.length || 0) - 1) {
+    if (assessment?.questions && currentQuestion < assessment.questions.length - 1) {
       setCurrentQuestion((prev) => prev + 1);
     }
   };
@@ -110,8 +124,9 @@ const Assessment = () => {
     );
   }
 
-  const currentQuestionData = assessment?.questions?.[currentQuestion];
-  const progress = ((currentQuestion + 1) / (assessment?.questions?.length || 1)) * 100;
+  const questions = assessment?.questions || [];
+  const currentQuestionData = questions[currentQuestion] as Question;
+  const progress = ((currentQuestion + 1) / questions.length) * 100;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -149,7 +164,7 @@ const Assessment = () => {
                 >
                   Previous
                 </Button>
-                {currentQuestion === assessment.questions.length - 1 ? (
+                {currentQuestion === questions.length - 1 ? (
                   <Button onClick={handleSubmit}>Submit</Button>
                 ) : (
                   <Button onClick={handleNext}>Next</Button>
