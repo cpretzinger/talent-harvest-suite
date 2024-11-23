@@ -19,15 +19,74 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Problem Statement Section */}
       <section className="py-20 bg-primary text-cream">
         <div className="container mx-auto px-6">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
-            Missing Another Family Dinner? The Real Price of Producer Problems
+            Sales Killers Are 1 In A 1000
           </h2>
+          
+          {/* Core Problems List */}
+          <div className="glass-morphism p-12 rounded-xl mb-16">
+            <ul className="space-y-6 text-xl">
+              <li className="flex items-start space-x-4">
+                <span className="text-secondary">1.</span>
+                <span>Long ramp-up period before producers become profitable (typically 12-18 months)</span>
+              </li>
+              <li className="flex items-start space-x-4">
+                <span className="text-secondary">2.</span>
+                <span>High upfront costs of licensing, training, and guarantees for new producers</span>
+              </li>
+              <li className="flex items-start space-x-4">
+                <span className="text-secondary">3.</span>
+                <span>Risk of investing in candidates who may not succeed in the role</span>
+              </li>
+              <li className="flex items-start space-x-4">
+                <span className="text-secondary">4.</span>
+                <span>Complexity of structuring competitive compensation packages that balance base salary and commissions</span>
+              </li>
+            </ul>
+          </div>
+
+          {/* Consequences Section */}
+          <div className="glass-morphism p-12 rounded-xl">
+            <h3 className="text-3xl font-bold mb-8 text-secondary">Leading to Financial Devastation</h3>
+            <p className="text-xl mb-8 italic">Avoidance compounds the issue, causing:</p>
+            <ul className="space-y-4 text-lg">
+              <li className="flex items-start space-x-4">
+                <span className="text-secondary">•</span>
+                <span>Personal debt accumulation to fund new hire investments</span>
+              </li>
+              <li className="flex items-start space-x-4">
+                <span className="text-secondary">•</span>
+                <span>Delayed personal income and family financial plans</span>
+              </li>
+              <li className="flex items-start space-x-4">
+                <span className="text-secondary">•</span>
+                <span>Stress from supporting non-productive payroll</span>
+              </li>
+              <li className="flex items-start space-x-4">
+                <span className="text-secondary">•</span>
+                <span>Reduced ability to invest in agency growth</span>
+              </li>
+              <li className="flex items-start space-x-4">
+                <span className="text-secondary">•</span>
+                <span>Impact on children's college funds or family investments</span>
+              </li>
+              <li className="flex items-start space-x-4">
+                <span className="text-secondary">•</span>
+                <span>Deteriorating confidence in business decisions</span>
+              </li>
+              <li className="flex items-start space-x-4">
+                <span className="text-secondary">•</span>
+                <span>Strain on personal credit and financial security</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </section>
 
-      {/* Section 1 */}
+      {/* Section 2 */}
       <section className="py-20 bg-cream">
         <div className="container mx-auto px-6">
           <div className="glass-morphism p-12 rounded-xl hover-lift">
@@ -56,7 +115,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Section 2 */}
+      {/* Section 3 */}
       <section className="py-20 bg-primary text-cream">
         <div className="container mx-auto px-6">
           <div className="glass-morphism p-12 rounded-xl hover-lift">
@@ -85,7 +144,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Section 3 */}
+      {/* Section 4 */}
       <section className="py-20 bg-cream">
         <div className="container mx-auto px-6">
           <div className="glass-morphism p-12 rounded-xl hover-lift">
