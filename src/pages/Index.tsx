@@ -2,6 +2,8 @@ import Navigation from "../components/Navigation";
 import RotatingSubheadline from "@/components/RotatingSubheadline";
 import { CostAnalysisSection } from "@/components/sections/CostAnalysisSection";
 import { HealthImpactSection } from "@/components/sections/HealthImpactSection";
+import { AgencyTimelineChart } from "@/components/sections/AgencyTimelineChart";
+import { BrickWall } from "@/components/sections/BrickWall";
 
 const Index = () => {
   return (
@@ -111,6 +113,26 @@ const Index = () => {
         <div className="container mx-auto px-6">
           <CostAnalysisSection />
           <HealthImpactSection />
+          
+          {/* Timeline Chart Section */}
+          <div className="grid md:grid-cols-2 gap-8 mt-8">
+            <div className="glass-morphism p-8 rounded-xl">
+              <h3 className="text-2xl font-bold mb-6 text-primary">Agency Timeline</h3>
+              <AgencyTimelineChart />
+              <p className="text-lg text-primary/80 italic mt-6">
+                We were on the red line, desperately hoping something would shift.
+              </p>
+            </div>
+
+            {/* Why We Made It A Must Section */}
+            <div className="glass-morphism p-8 rounded-xl">
+              <h3 className="text-2xl font-bold mb-6 text-primary">Why We Made It A Must:</h3>
+              <BrickWall />
+              <p className="text-xl text-secondary font-bold text-center mt-6">
+                The Writing Was On the Wall!
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
