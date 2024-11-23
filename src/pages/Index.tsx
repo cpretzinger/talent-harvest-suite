@@ -4,6 +4,7 @@ import { CostAnalysisSection } from "@/components/sections/CostAnalysisSection";
 import { HealthImpactSection } from "@/components/sections/HealthImpactSection";
 import { AgencyTimelineChart } from "@/components/sections/AgencyTimelineChart";
 import { BrickWall } from "@/components/sections/BrickWall";
+import { FeatureCards } from "@/components/sections/FeatureCards";
 
 const Index = () => {
   return (
@@ -125,7 +126,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Our Problem Section - Moved up */}
+      {/* Our Problem Section */}
       <section className="py-20 bg-primary text-cream">
         <div className="container mx-auto px-6">
           <div className="glass-morphism p-12 rounded-xl hover-lift">
@@ -153,14 +154,12 @@ const Index = () => {
       {/* Timeline Chart Section */}
       <section className="py-20 bg-cream">
         <div className="container mx-auto px-6">
-          {/* Duplicate Timeline Chart */}
           <div className="grid md:grid-cols-2 gap-8 mt-8">
             <div className="glass-morphism p-8 rounded-xl">
               <h3 className="text-2xl font-bold mb-6 text-primary">Agency Timeline</h3>
               <AgencyTimelineChart />
             </div>
 
-            {/* Duplicate Why We Made It A Must Section */}
             <div className="glass-morphism p-8 rounded-xl">
               <h3 className="text-2xl font-bold mb-6 text-primary">Why We Made It A Must:</h3>
               <BrickWall />
@@ -171,6 +170,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Feature Cards Section */}
+      <FeatureCards />
     </div>
   );
 };
