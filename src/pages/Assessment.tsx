@@ -7,16 +7,14 @@ import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
-
-interface Question {
-  question: string;
-  options: string[];
-}
+import { QuestionDisplay } from "@/components/assessment/QuestionDisplay";
+import { AssessmentResults } from "@/components/assessment/AssessmentResults";
+import { Question, Json } from "@/types/assessment";
 
 interface AssessmentData {
   id: string;
   questions: Question[] | null;
-  responses: Record<string, any> | null;
+  responses: Json[] | null;
   started_at: string | null;
   completed_at: string | null;
   completion_time: number | null;
@@ -28,7 +26,7 @@ const Assessment = () => {
   const { toast } = useToast();
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(3600);
-  const [responses, setResponses] = useState<Record<string, any>>({});
+  const [responses, setResponses] = useState<Json[]>([]);
 
   const { data: assessment, isLoading } = useQuery({
     queryKey: ["assessment", id],
@@ -41,7 +39,6 @@ const Assessment = () => {
 
       if (error) throw error;
       
-      // Safely cast the JSON data to our Question[] type
       const questions = Array.isArray(data.questions) 
         ? data.questions.map((q: any) => ({
             question: q.question as string,
@@ -81,10 +78,7 @@ const Assessment = () => {
   }, []);
 
   const handleAnswer = (answer: any) => {
-    setResponses((prev) => ({
-      ...prev,
-      [currentQuestion]: answer,
-    }));
+    setResponses((prev) => [...prev, answer]);
   };
 
   const handleNext = () => {
@@ -155,19 +149,10 @@ const Assessment = () => {
         <CardContent>
           {currentQuestionData && (
             <div className="space-y-6">
-              <div className="text-lg font-medium">{currentQuestionData.question}</div>
-              <div className="space-y-4">
-                {currentQuestionData.options?.map((option: string, index: number) => (
-                  <Button
-                    key={index}
-                    variant={responses[currentQuestion] === option ? "default" : "outline"}
-                    className="w-full justify-start text-left"
-                    onClick={() => handleAnswer(option)}
-                  >
-                    {option}
-                  </Button>
-                ))}
-              </div>
+              <QuestionDisplay
+                question={currentQuestionData}
+                onAnswer={handleAnswer}
+              />
               <div className="flex justify-between mt-6">
                 <Button
                   variant="outline"
