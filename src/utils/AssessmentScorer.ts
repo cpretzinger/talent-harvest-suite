@@ -5,8 +5,10 @@ import {
   Profile,
   Question,
   ScoreLevel,
-  StylePattern
+  StylePattern,
+  ValuesDimension
 } from '@/types/assessment';
+import { Json } from '@/types/database/schema';
 
 interface ScoreRange {
   min: number;
@@ -72,14 +74,19 @@ export class AssessmentScorer {
     const discScores = this.calculateDISCScores(answers, questions);
     const valueScores = this.calculateValueScores(answers, questions);
     const dimensionalBalance = this.calculateDimensionalBalance(discScores, valueScores);
+    const profile = this.formatOverallProfile(discScores, valueScores);
 
     return {
-      user_id: '',  // Placeholder; set appropriate user_id
-      assessment_id: '',  // Placeholder; set appropriate assessment_id
-      scores: this.formatCategoryScores(discScores),
-      dimensional_balance: dimensionalBalance,
-      overall_profile: this.formatOverallProfile(discScores, valueScores)
+      user_id: '',
+      assessment_id: '',
+      scores: this.convertToJson(this.formatCategoryScores(discScores.natural)),
+      dimensional_balance: this.convertToJson(dimensionalBalance),
+      overall_profile: this.convertToJson(profile)
     };
+  }
+
+  private convertToJson<T>(data: T): Json {
+    return JSON.parse(JSON.stringify(data));
   }
 
   private calculateDISCScores(answers: Record<string, number>, questions: Question[]): {
@@ -181,7 +188,10 @@ export class AssessmentScorer {
     return insights;
   }
 
-  private formatOverallProfile(discScores: { natural: StylePattern; adaptive: StylePattern }, valueScores: Record<string, number>): Profile {
+  private formatOverallProfile(
+    discScores: { natural: StylePattern; adaptive: StylePattern },
+    valueScores: Record<string, number>
+  ): Profile {
     return {
       naturalStyle: discScores.natural,
       adaptiveStyle: discScores.adaptive,

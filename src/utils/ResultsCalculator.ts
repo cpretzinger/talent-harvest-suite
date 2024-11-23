@@ -14,14 +14,14 @@ export class ResultsCalculator {
     const answers = this.formatResponses(responses);
     const questions = this.extractQuestions(responses);
     
-    const profile = this.scorer.calculateScores(answers, questions);
+    const result = this.scorer.calculateScores(answers, questions);
     
     return {
       user_id: responses[0].user_id,
       assessment_id: responses[0].assessment_id,
-      scores: this.convertToJson(this.formatCategoryScores(profile)),
-      dimensional_balance: this.convertToJson(profile),
-      overall_profile: this.convertToJson(profile)
+      scores: result.scores,
+      dimensional_balance: result.dimensional_balance,
+      overall_profile: result.overall_profile
     };
   }
 

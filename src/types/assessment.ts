@@ -1,28 +1,4 @@
-import { Tables } from "./database/tables";
 import { Json } from "./database/schema";
-
-export type Question = Tables<"questions"> & {
-  options?: string[];
-};
-
-export type Assessment = Tables<"assessments">;
-export type AssessmentResult = Tables<"assessment_results">;
-export type Response = Tables<"responses">;
-
-export type QuestionType = 'likert' | 'ranking' | 'multiple_choice';
-
-export type AssessmentCategory = 
-  | 'Decisive'
-  | 'Interactive'
-  | 'Stability'
-  | 'Cautious'
-  | 'Aesthetic'
-  | 'Economic'
-  | 'Individualistic'
-  | 'Political'
-  | 'Altruist'
-  | 'Regulatory'
-  | 'Theoretical';
 
 export interface StylePattern {
   D: number;
@@ -64,3 +40,22 @@ export interface CategoryScore {
   level: ScoreLevel;
   insights: string[];
 }
+
+export interface AssessmentResult {
+  user_id: string;
+  assessment_id: string;
+  scores: Json;
+  dimensional_balance: Json;
+  overall_profile: Json;
+}
+
+export type Question = {
+  id: string;
+  assessment_id: string;
+  text: string;
+  category: string;
+  type: string;
+  options?: Json | null;
+  weight: number;
+  created_at: string;
+};
