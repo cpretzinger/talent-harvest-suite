@@ -114,40 +114,11 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Section 3 and 4 */}
+      {/* Section 3 */}
       <section className="py-20 bg-primary text-cream">
         <div className="container mx-auto px-6">
           <div className="glass-morphism p-12 rounded-xl hover-lift">
             <h3 className="text-3xl md:text-4xl font-bold mb-8">
-              Your Agency Is Growing, But Your Life Is Shrinking: The Hidden Cost of Producer Problems
-            </h3>
-            <ul className="space-y-6 text-lg opacity-90">
-              <li className="flex items-start space-x-4">
-                <span className="font-semibold min-w-fit">Our Problem:</span>
-                <span>You're trapped in a cycle of micromanagement and crisis control.</span>
-              </li>
-              <li className="flex items-start space-x-4">
-                <span className="font-semibold min-w-fit">The Reality:</span>
-                <span>Your days are consumed by:</span>
-              </li>
-              <li className="pl-8">• Emergency producer interventions</li>
-              <li className="pl-8">• Constant performance monitoring</li>
-              <li className="pl-8">• Endless training sessions</li>
-              <li className="pl-8">• Damage control with clients</li>
-              <li className="flex items-start space-x-4 pt-6">
-                <span className="font-semibold min-w-fit">The Cost:</span>
-                <span className="text-secondary font-bold">Your family sees your empty chair more than you.</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* Section 4 */}
-      <section className="py-20 bg-cream">
-        <div className="container mx-auto px-6">
-          <div className="glass-morphism p-12 rounded-xl hover-lift">
-            <h3 className="text-3xl md:text-4xl font-bold mb-8 text-primary">
               Our Problem
             </h3>
             <ul className="space-y-6 text-lg opacity-90">
