@@ -72,7 +72,7 @@ export function ChatBox() {
     return (
       <Button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-4 right-4 rounded-full p-4 shadow-lg hover:shadow-xl transition-shadow"
+        className="fixed bottom-4 right-4 rounded-full p-4 shadow-lg hover:shadow-xl transition-shadow z-50"
       >
         <MessageCircle className="h-6 w-6" />
       </Button>
@@ -81,7 +81,7 @@ export function ChatBox() {
 
   return (
     <Draggable handle=".drag-handle" bounds="parent">
-      <div className="absolute right-4 bottom-4 w-96">
+      <div className="fixed right-4 bottom-4 w-96 z-50">
         <Card className="flex flex-col h-[600px] border-2 shadow-xl">
           <div className="p-4 border-b bg-primary text-primary-foreground drag-handle cursor-move flex justify-between items-center">
             <h2 className="text-lg font-semibold">AI Assistant</h2>
