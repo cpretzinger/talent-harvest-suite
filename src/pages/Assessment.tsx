@@ -14,7 +14,7 @@ import { calculateScores, calculateDimensionalBalance, calculateOverallProfile }
 type Question = Tables<"questions">;
 
 const Assessment = () => {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
