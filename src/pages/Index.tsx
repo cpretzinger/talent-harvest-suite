@@ -113,30 +113,10 @@ const Index = () => {
         <div className="container mx-auto px-6">
           <CostAnalysisSection />
           <HealthImpactSection />
-          
-          {/* Timeline Chart Section */}
-          <div className="grid md:grid-cols-2 gap-8 mt-8">
-            <div className="glass-morphism p-8 rounded-xl">
-              <h3 className="text-2xl font-bold mb-6 text-primary">Agency Timeline</h3>
-              <AgencyTimelineChart />
-              <p className="text-lg text-primary/80 italic mt-6">
-                We had to switch paths or be doomed!
-              </p>
-            </div>
-
-            {/* Why We Made It A Must Section */}
-            <div className="glass-morphism p-8 rounded-xl">
-              <h3 className="text-2xl font-bold mb-6 text-primary">Why We Made It A Must:</h3>
-              <BrickWall />
-              <p className="text-xl text-secondary font-bold text-center mt-6">
-                The Writing Was On the Wall!
-              </p>
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* Section 3 */}
+      {/* Our Problem Section - Moved up */}
       <section className="py-20 bg-primary text-cream">
         <div className="container mx-auto px-6">
           <div className="glass-morphism p-12 rounded-xl hover-lift">
@@ -157,6 +137,30 @@ const Index = () => {
               <li className="pl-8">• Keeping producers motivated and engaged during the extended sales cycle</li>
               <li className="pl-8">• Managing performance expectations while building a book of business</li>
             </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Timeline Chart Section */}
+      <section className="py-20 bg-cream">
+        <div className="container mx-auto px-6">
+          <div className="grid md:grid-cols-2 gap-8 mt-8">
+            <div className="glass-morphism p-8 rounded-xl">
+              <h3 className="text-2xl font-bold mb-6 text-primary">Agency Timeline</h3>
+              <AgencyTimelineChart />
+              <p className="text-lg text-primary/80 italic mt-6">
+                We had to switch paths or be doomed!
+              </p>
+            </div>
+
+            {/* Why We Made It A Must Section */}
+            <div className="glass-morphism p-8 rounded-xl">
+              <h3 className="text-2xl font-bold mb-6 text-primary">Why We Made It A Must:</h3>
+              <BrickWall />
+              <p className="text-xl text-secondary font-bold text-center mt-6">
+                The Writing Was On the Wall!
+              </p>
+            </div>
           </div>
         </div>
       </section>
