@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
-import { Loader2, Plus, LayoutGrid, List } from "lucide-react";
+import { Loader2, Plus, LayoutGrid, List, CheckCircle2 } from "lucide-react";
 import { useState } from "react";
 import { LeadForm } from "@/components/leads/LeadForm";
 import { LeadPipeline } from "@/components/leads/LeadPipeline";
@@ -64,6 +64,19 @@ const Leads = () => {
     );
   }
 
+  const features = [
+    "Kanban-style pipeline view",
+    "List view with detailed information",
+    "Add and manage candidates",
+    "Track candidate status and progress",
+    "Document management",
+    "Communication history",
+    "Task management",
+    "Follow-up reminders",
+    "Assessment scoring",
+    "Placement tracking",
+  ];
+
   return (
     <div className="container mx-auto py-10 px-4">
       <div className="flex justify-between items-center mb-8">
@@ -72,6 +85,14 @@ const Leads = () => {
           <p className="text-muted-foreground mt-1">
             Manage and track your recruitment pipeline
           </p>
+          <div className="mt-4 grid grid-cols-2 gap-2 max-w-2xl">
+            {features.map((feature, index) => (
+              <div key={index} className="flex items-center gap-2 text-sm text-muted-foreground">
+                <CheckCircle2 className="h-4 w-4 text-secondary" />
+                <span>{feature}</span>
+              </div>
+            ))}
+          </div>
         </div>
         <div className="flex gap-2">
           <div className="border rounded-md p-1">

@@ -21,7 +21,7 @@ const Navigation = () => {
     >
       <div className="container mx-auto px-6">
         <div className="flex items-center justify-between">
-          <a href="/" className="text-2xl font-semibold hover-lift text-cream">
+          <a href="/" className="text-2xl font-semibold hover-lift bg-gradient-to-r from-cream to-secondary bg-clip-text text-transparent">
             Elite Hires
           </a>
 
@@ -31,7 +31,7 @@ const Navigation = () => {
               <a
                 key={item}
                 href={`#${item.toLowerCase()}`}
-                className="text-lg font-semibold text-cream/90 hover:text-cream transition-colors hover-lift"
+                className="text-lg font-semibold bg-gradient-to-r from-cream to-secondary bg-clip-text text-transparent hover:opacity-80 transition-opacity hover-lift"
               >
                 {item}
               </a>
@@ -56,7 +56,7 @@ const Navigation = () => {
                 <a
                   key={item}
                   href={`#${item.toLowerCase()}`}
-                  className="text-lg font-semibold text-cream/90 hover:text-cream transition-colors hover-lift"
+                  className="text-lg font-semibold bg-gradient-to-r from-cream to-secondary bg-clip-text text-transparent hover:opacity-80 transition-opacity hover-lift"
                   onClick={() => setIsOpen(false)}
                 >
                   {item}
