@@ -81,3 +81,39 @@ export interface MarketFilters {
   competition: [number, number];
   region: string[];
 }
+
+export interface MarketContext {
+  timeframe: 'short' | 'medium' | 'long';
+  strategy: 'aggressive' | 'balanced' | 'conservative';
+  resources: {
+    budget: number;
+    team: number;
+  };
+}
+
+export interface Recommendation {
+  title: string;
+  description: string;
+  actions: string[];
+  priority: 'high' | 'medium' | 'low';
+  impact: 'high' | 'medium' | 'low';
+  timeframe: 'immediate' | 'short-term' | 'long-term';
+}
+
+export interface ContextualInsight {
+  type: string;
+  insight: string;
+  confidence: number;
+}
+
+export interface EnhancedRecommendation extends Recommendation {
+  contextualInsights: ContextualInsight[];
+  confidenceScore: number;
+}
+
+export interface MarketScore {
+  overall: number;
+  components: Record<string, number>;
+  confidence: number;
+  trends: Record<string, number>;
+}
