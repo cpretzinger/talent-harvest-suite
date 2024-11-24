@@ -4,7 +4,7 @@ import ResourcesPage from "@/pages/Resources";
 import Index from "@/pages/Index";
 import Leads from "@/pages/Leads";
 import { AssessmentResults } from "@/components/assessment/AssessmentResults";
-import MarketAnalysis from "@/pages/MarketAnalysis";
+import LeadIntelligence from "@/pages/LeadIntelligence";
 import AdminDashboard from "@/pages/AdminDashboard";
 import { AdminUserManagement } from "@/components/admin/AdminUserManagement";
 import { AdminSettings } from "@/components/admin/AdminSettings";
@@ -29,7 +29,7 @@ export const AppRoutes = () => {
       />
       <Route path="/resources" element={<ResourcesPage />} />
       <Route path="/resources/category/:categorySlug" element={<ResourcesPage />} />
-      <Route path="/market-analysis" element={<MarketAnalysis />} />
+      <Route path="/intelligence" element={<LeadIntelligence />} />
       
       {/* Admin routes with auth temporarily disabled */}
       <Route path="/admin" element={<AdminDashboard />}>

@@ -279,6 +279,44 @@ export type Database = {
           },
         ]
       }
+      custom_fields: {
+        Row: {
+          agency_id: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          agency_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          agency_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_fields_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       documents: {
         Row: {
           created_at: string | null
@@ -329,15 +367,22 @@ export type Database = {
       }
       leads: {
         Row: {
+          analysis_results: Json | null
           assessment_score: number | null
           assigned_to: string | null
           communication_history: Json[] | null
+          contact_method: string | null
           created_at: string | null
+          custom_fields: Json | null
+          dial_count: number | null
           email: string
           first_name: string
+          follow_up_count: number | null
           follow_ups: Json[] | null
           id: string
           last_name: string
+          lead_score: number | null
+          lifetime_talk_time: number | null
           notes: string[] | null
           phone: string | null
           pipeline_stage: string | null
@@ -345,18 +390,26 @@ export type Database = {
           source: string | null
           status: string
           tasks: Json[] | null
+          total_quoted: number | null
           updated_at: string | null
         }
         Insert: {
+          analysis_results?: Json | null
           assessment_score?: number | null
           assigned_to?: string | null
           communication_history?: Json[] | null
+          contact_method?: string | null
           created_at?: string | null
+          custom_fields?: Json | null
+          dial_count?: number | null
           email: string
           first_name: string
+          follow_up_count?: number | null
           follow_ups?: Json[] | null
           id?: string
           last_name: string
+          lead_score?: number | null
+          lifetime_talk_time?: number | null
           notes?: string[] | null
           phone?: string | null
           pipeline_stage?: string | null
@@ -364,18 +417,26 @@ export type Database = {
           source?: string | null
           status?: string
           tasks?: Json[] | null
+          total_quoted?: number | null
           updated_at?: string | null
         }
         Update: {
+          analysis_results?: Json | null
           assessment_score?: number | null
           assigned_to?: string | null
           communication_history?: Json[] | null
+          contact_method?: string | null
           created_at?: string | null
+          custom_fields?: Json | null
+          dial_count?: number | null
           email?: string
           first_name?: string
+          follow_up_count?: number | null
           follow_ups?: Json[] | null
           id?: string
           last_name?: string
+          lead_score?: number | null
+          lifetime_talk_time?: number | null
           notes?: string[] | null
           phone?: string | null
           pipeline_stage?: string | null
@@ -383,6 +444,7 @@ export type Database = {
           source?: string | null
           status?: string
           tasks?: Json[] | null
+          total_quoted?: number | null
           updated_at?: string | null
         }
         Relationships: [
