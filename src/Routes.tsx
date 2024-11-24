@@ -6,7 +6,6 @@ import Leads from "@/pages/Leads";
 import { AssessmentResults } from "@/components/assessment/AssessmentResults";
 import MarketAnalysis from "@/pages/MarketAnalysis";
 import AdminDashboard from "@/pages/AdminDashboard";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AdminUserManagement } from "@/components/admin/AdminUserManagement";
 import { AdminSettings } from "@/components/admin/AdminSettings";
 import { AdminAuditLogs } from "@/components/admin/AdminAuditLogs";
@@ -32,15 +31,8 @@ export const AppRoutes = () => {
       <Route path="/resources/category/:categorySlug" element={<ResourcesPage />} />
       <Route path="/market-analysis" element={<MarketAnalysis />} />
       
-      {/* Admin routes with proper nesting */}
-      <Route 
-        path="/admin" 
-        element={
-          <ProtectedRoute allowedRoles={["administrator"]}>
-            <AdminDashboard />
-          </ProtectedRoute>
-        }
-      >
+      {/* Admin routes with auth temporarily disabled */}
+      <Route path="/admin" element={<AdminDashboard />}>
         <Route index element={<AdminOverview />} />
         <Route path="users" element={<AdminUserManagement />} />
         <Route path="settings" element={<AdminSettings />} />
