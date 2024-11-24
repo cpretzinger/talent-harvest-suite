@@ -74,3 +74,10 @@ export interface RecommendationsProps {
   markets: Market[];
   metrics: Record<string, MarketMetrics>;
 }
+
+export interface MarketFilters {
+  size: [number, number];
+  growth: [number, number];
+  competition: [number, number];
+  region: string[];
+}
