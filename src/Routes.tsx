@@ -29,9 +29,15 @@ export const AppRoutes = () => {
       />
       <Route path="/resources" element={<ResourcesPage />} />
       <Route path="/resources/category/:categorySlug" element={<ResourcesPage />} />
-      <Route path="/intelligence" element={<LeadIntelligence />} />
       
-      {/* Admin routes with auth temporarily disabled */}
+      {/* Lead Intelligence Routes */}
+      <Route path="/intelligence" element={<LeadIntelligence />} />
+      <Route path="/intelligence/lead-iq" element={<LeadIntelligence />} />
+      <Route path="/intelligence/compliance" element={<LeadIntelligence />} />
+      <Route path="/intelligence/buy" element={<LeadIntelligence />} />
+      <Route path="/intelligence/secrets" element={<LeadIntelligence />} />
+      
+      {/* Admin routes */}
       <Route path="/admin" element={<AdminDashboard />}>
         <Route index element={<AdminOverview />} />
         <Route path="users" element={<AdminUserManagement />} />
