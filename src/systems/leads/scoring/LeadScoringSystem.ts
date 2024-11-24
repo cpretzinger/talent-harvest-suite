@@ -1,6 +1,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import { LeadData, ScoredLead } from '@/types/leads';
 import { LeadScoringModel } from '@/lib/ml/LeadScoringModel';
+import { Json } from '@/integrations/supabase/types';
 
 interface ScoringCriteria {
   factor: string;
@@ -45,14 +46,9 @@ export class LeadScoringSystem {
     return {};
   }
 
-  private async generateRecommendations(lead: LeadData): Promise<any> {
+  private async generateRecommendations(lead: LeadData): Promise<string[]> {
     // Implementation
     return [];
-  }
-
-  private combineScores(baseScore: number, mlScore: number): number {
-    // Implementation
-    return 0;
   }
 
   private initializeScoringCriteria(): ScoringCriteria[] {
@@ -65,14 +61,19 @@ export class LeadScoringSystem {
     return 0;
   }
 
+  private combineScores(baseScore: number, mlScore: number): number {
+    // Implementation
+    return 0;
+  }
+
   private async saveLeadScore(scoredLead: ScoredLead): Promise<void> {
     const { error } = await supabase
       .from('lead_scores')
       .upsert({
         lead_id: scoredLead.id,
         score: scoredLead.score,
-        factors: scoredLead.factors,
-        recommendations: scoredLead.recommendations
+        factors: JSON.stringify(scoredLead.factors) as Json,
+        recommendations: JSON.stringify(scoredLead.recommendations) as Json
       });
 
     if (error) throw error;
