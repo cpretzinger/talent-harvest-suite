@@ -1,18 +1,14 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { AdminSidebar } from "@/components/admin/AdminSidebar";
-import { AdminHeader } from "@/components/admin/AdminHeader";
-import { AdminOverview } from "@/components/admin/AdminOverview";
-import { AdminUserManagement } from "@/components/admin/AdminUserManagement";
-import { AdminAuditLogs } from "@/components/admin/AdminAuditLogs";
-import { AdminSettings } from "@/components/admin/AdminSettings";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AdminDashboardDev } from "@/components/admin/AdminDashboardDev";
+import { AdminDashboardProd } from "@/components/admin/AdminDashboardProd";
 import { Loader2 } from "lucide-react";
 
 export default function AdminDashboard() {
   const { user, profile, isLoading } = useAuth();
   const navigate = useNavigate();
+  const isDevelopment = process.env.NODE_ENV === 'development';
 
   useEffect(() => {
     if (!isLoading && (!user || profile?.role !== 'administrator')) {
@@ -28,40 +24,5 @@ export default function AdminDashboard() {
     );
   }
 
-  return (
-    <div className="flex h-screen bg-gray-100">
-      <AdminSidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <AdminHeader />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
-          <div className="container mx-auto px-6 py-8">
-            <Tabs defaultValue="overview" className="space-y-6">
-              <TabsList>
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="users">Users</TabsTrigger>
-                <TabsTrigger value="audit">Audit Logs</TabsTrigger>
-                <TabsTrigger value="settings">Settings</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="overview">
-                <AdminOverview />
-              </TabsContent>
-              
-              <TabsContent value="users">
-                <AdminUserManagement />
-              </TabsContent>
-
-              <TabsContent value="audit">
-                <AdminAuditLogs />
-              </TabsContent>
-
-              <TabsContent value="settings">
-                <AdminSettings />
-              </TabsContent>
-            </Tabs>
-          </div>
-        </main>
-      </div>
-    </div>
-  );
+  return isDevelopment ? <AdminDashboardDev /> : <AdminDashboardProd />;
 }

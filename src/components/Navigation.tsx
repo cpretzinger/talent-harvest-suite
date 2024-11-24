@@ -27,7 +27,7 @@ const Navigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {["Products", "Features", "About", "Contact"].map((item) => (
+            {["Products", "Features", "Dash", "Contact"].map((item) => (
               <a
                 key={item}
                 href={`#${item.toLowerCase()}`}
@@ -52,7 +52,7 @@ const Navigation = () => {
         {isOpen && (
           <div className="md:hidden absolute top-full left-0 w-full bg-primary/95 backdrop-blur-md mt-2 py-4">
             <div className="flex flex-col items-center space-y-4">
-              {["Products", "Features", "About", "Contact"].map((item) => (
+              {["Products", "Features", "Dash", "Contact"].map((item) => (
                 <a
                   key={item}
                   href={`#${item.toLowerCase()}`}
