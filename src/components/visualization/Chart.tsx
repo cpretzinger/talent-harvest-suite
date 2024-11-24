@@ -80,7 +80,7 @@ export const Chart: React.FC<ChartProps> = ({
       )}
       <div ref={containerRef} className="h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
-          {/* Chart content will be rendered here by the visualization system */}
+          <div>Chart content will be rendered here by the visualization system</div>
         </ResponsiveContainer>
       </div>
     </Card>
