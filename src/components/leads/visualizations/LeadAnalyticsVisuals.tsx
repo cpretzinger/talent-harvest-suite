@@ -33,7 +33,7 @@ const ConversionFunnelChart: React.FC<{ data: LeadData[] }> = ({ data }) => {
             data={funnelData}
             dataKey="value"
             nameKey="stage"
-            gradientRatio={[0.15, 0.85]}
+            fill="#8884d8"
           >
             <LabelList position="right" fill="#000" stroke="none" />
             <Tooltip />

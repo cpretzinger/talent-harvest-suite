@@ -28,7 +28,7 @@ export class CustomFieldManager {
 
   private async getAgencyCustomFields(agencyId: string): Promise<CustomField[]> {
     const { data, error } = await supabase
-      .from('custom_field_definitions')
+      .from('custom_fields')
       .select('*')
       .eq('agency_id', agencyId);
 
@@ -45,11 +45,11 @@ export class CustomFieldManager {
     config: CustomFieldConfig
   ): Promise<CustomField> {
     const { data, error } = await supabase
-      .from('custom_field_definitions')
+      .from('custom_fields')
       .insert({
         agency_id: agencyId,
         name: config.name,
-        field_type: config.type,
+        type: config.type,
         validation_rules: config.validation,
         default_value: config.defaultValue,
         options: config.options

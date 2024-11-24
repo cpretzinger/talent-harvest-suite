@@ -279,6 +279,50 @@ export type Database = {
           },
         ]
       }
+      custom_field_definitions: {
+        Row: {
+          agency_id: string | null
+          created_at: string | null
+          default_value: Json | null
+          field_type: string
+          id: string
+          name: string
+          options: Json | null
+          updated_at: string | null
+          validation_rules: Json | null
+        }
+        Insert: {
+          agency_id?: string | null
+          created_at?: string | null
+          default_value?: Json | null
+          field_type: string
+          id?: string
+          name: string
+          options?: Json | null
+          updated_at?: string | null
+          validation_rules?: Json | null
+        }
+        Update: {
+          agency_id?: string | null
+          created_at?: string | null
+          default_value?: Json | null
+          field_type?: string
+          id?: string
+          name?: string
+          options?: Json | null
+          updated_at?: string | null
+          validation_rules?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "custom_field_definitions_agency_id_fkey"
+            columns: ["agency_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       custom_fields: {
         Row: {
           agency_id: string | null
@@ -361,6 +405,44 @@ export type Database = {
             columns: ["uploaded_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_scores: {
+        Row: {
+          created_at: string | null
+          factors: Json | null
+          id: string
+          lead_id: string | null
+          recommendations: Json | null
+          score: number
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          factors?: Json | null
+          id?: string
+          lead_id?: string | null
+          recommendations?: Json | null
+          score: number
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          factors?: Json | null
+          id?: string
+          lead_id?: string | null
+          recommendations?: Json | null
+          score?: number
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_scores_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
             referencedColumns: ["id"]
           },
         ]
@@ -662,6 +744,33 @@ export type Database = {
           prediction_threshold?: number
           update_frequency?: number
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      pattern_analysis: {
+        Row: {
+          analysis_type: string
+          created_at: string | null
+          id: string
+          patterns: Json
+          recommendations: Json | null
+          significance: number | null
+        }
+        Insert: {
+          analysis_type: string
+          created_at?: string | null
+          id?: string
+          patterns: Json
+          recommendations?: Json | null
+          significance?: number | null
+        }
+        Update: {
+          analysis_type?: string
+          created_at?: string | null
+          id?: string
+          patterns?: Json
+          recommendations?: Json | null
+          significance?: number | null
         }
         Relationships: []
       }

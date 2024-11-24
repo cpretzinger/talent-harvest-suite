@@ -40,11 +40,6 @@ export class LeadScoringSystem {
     return this.combineScores(baseScore, mlScore);
   }
 
-  private calculateBaseScore(lead: LeadData): number {
-    // Implementation
-    return 0;
-  }
-
   private async identifyScoreFactors(lead: LeadData): Promise<any> {
     // Implementation
     return {};
@@ -63,6 +58,11 @@ export class LeadScoringSystem {
   private initializeScoringCriteria(): ScoringCriteria[] {
     // Implementation
     return [];
+  }
+
+  private calculateBaseScore(lead: LeadData): number {
+    // Implementation
+    return 0;
   }
 
   private async saveLeadScore(scoredLead: ScoredLead): Promise<void> {

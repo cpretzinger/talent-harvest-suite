@@ -1,3 +1,5 @@
+import { LeadData } from '@/types/leads';
+
 interface TeFunnelConfig {
   apiKey: string;
   endpoint: string;
