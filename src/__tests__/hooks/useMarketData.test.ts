@@ -2,6 +2,7 @@ import { renderHook, waitFor } from '@testing-library/react';
 import { useMarketData } from '@/hooks/useMarketData';
 import { vi } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 
 // Mock the Supabase client
 vi.mock('@/integrations/supabase/client', () => ({
@@ -25,11 +26,13 @@ describe('useMarketData', () => {
       { id: '1', name: 'New York', population: 8000000 }
     ];
 
-    vi.mocked(supabase.from).mockImplementation(() => ({
+    // Type assertion to access mocked methods
+    const mockedSupabase = vi.mocked(supabase);
+    mockedSupabase.from.mockImplementation(() => ({
       select: () => ({
         in: () => Promise.resolve({ data: mockData, error: null })
       })
-    }));
+    } as any));
 
     const { result } = renderHook(() => useMarketData(['1']), { wrapper });
 
