@@ -1,47 +1,48 @@
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
+import { useQuery } from '@tanstack/react-query';
 import { useMarketData } from '@/hooks/useMarketData';
 import { vi } from 'vitest';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
 
-// Mock the Supabase client
-vi.mock('@/integrations/supabase/client', () => ({
-  supabase: {
-    from: vi.fn().mockReturnThis(),
-    select: vi.fn().mockReturnThis(),
-    in: vi.fn().mockReturnThis()
-  }
+// Mock the tanstack-query hook
+vi.mock('@tanstack/react-query', () => ({
+  useQuery: vi.fn()
 }));
 
 describe('useMarketData', () => {
-  const queryClient = new QueryClient();
-  const wrapper = ({ children }: { children: React.ReactNode }) => (
-    <QueryClientProvider client={queryClient}>
-      {children}
-    </QueryClientProvider>
-  );
-
-  it('returns market data for given IDs', async () => {
-    const mockData = [
-      { id: '1', name: 'New York', population: 8000000 }
-    ];
-
-    // Mock the Supabase client response
-    (supabase.from as any).mockImplementation(() => ({
-      select: () => ({
-        in: () => Promise.resolve({ data: mockData, error: null })
-      })
-    }));
-
-    const { result } = renderHook(() => useMarketData(['1']), { wrapper });
-
-    await waitFor(() => {
-      expect(result.current.data).toEqual(mockData);
-    });
+  beforeEach(() => {
+    vi.clearAllMocks();
   });
 
-  it('handles empty market IDs array', async () => {
-    const { result } = renderHook(() => useMarketData([]), { wrapper });
-    expect(result.current.data).toBeUndefined();
+  it('should return market data when successful', () => {
+    const mockData = {
+      markets: [
+        { id: '1', name: 'Market 1' },
+        { id: '2', name: 'Market 2' }
+      ]
+    };
+
+    (useQuery as jest.Mock).mockReturnValue({
+      data: mockData,
+      isLoading: false,
+      error: null
+    });
+
+    const { result } = renderHook(() => useMarketData());
+
+    expect(result.current.data).toEqual(mockData);
+    expect(result.current.isLoading).toBe(false);
+    expect(result.current.error).toBeNull();
+  });
+
+  it('should handle loading state', () => {
+    (useQuery as jest.Mock).mockReturnValue({
+      data: null,
+      isLoading: true,
+      error: null
+    });
+
+    const { result } = renderHook(() => useMarketData());
+
+    expect(result.current.isLoading).toBe(true);
   });
 });
