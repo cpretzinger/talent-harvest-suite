@@ -45,11 +45,22 @@ export function ChatBox() {
     setIsLoading(true);
 
     try {
+      console.log('Sending chat request to Edge Function...');
       const { data, error } = await supabase.functions.invoke("chat-completion", {
-        body: JSON.stringify({ message: input }),
+        body: { message: input },
       });
 
-      if (error) throw error;
+      console.log('Response from Edge Function:', { data, error });
+
+      if (error) {
+        console.error('Supabase Edge Function error:', error);
+        throw error;
+      }
+
+      if (!data?.response) {
+        console.error('Invalid response format:', data);
+        throw new Error('Invalid response from chat service');
+      }
 
       const aiMessage: Message = {
         id: crypto.randomUUID(),
