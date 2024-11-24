@@ -1,5 +1,8 @@
 import { CachedData, FetchOptions } from '@/types/system';
 import { supabase } from '@/integrations/supabase/client';
+import { Database } from '@/integrations/supabase/types';
+
+type TableName = keyof Database['public']['Tables'] | keyof Database['public']['Views'];
 
 export class DataManager {
   private static instance: DataManager;
@@ -24,14 +27,14 @@ export class DataManager {
     this.cache = new Map();
   }
 
-  async getData<T>(key: string, options?: FetchOptions): Promise<T> {
-    const cachedData = this.cache.get(key);
+  async getData<T>(tableName: TableName, options?: FetchOptions): Promise<T> {
+    const cachedData = this.cache.get(tableName);
     if (cachedData && !this.isStale(cachedData, options?.maxAge)) {
       return cachedData.data as T;
     }
 
-    const data = await this.fetchFreshData<T>(key, options);
-    this.updateCache(key, data);
+    const data = await this.fetchFreshData<T>(tableName, options);
+    this.updateCache(tableName, data);
     return data;
   }
 
@@ -41,10 +44,9 @@ export class DataManager {
     return age > maxAge;
   }
 
-  private async fetchFreshData<T>(key: string, options?: FetchOptions): Promise<T> {
-    // Implement fetching logic using Supabase
+  private async fetchFreshData<T>(tableName: TableName, options?: FetchOptions): Promise<T> {
     const { data, error } = await supabase
-      .from(key)
+      .from(tableName)
       .select('*')
       .limit(1)
       .single();
