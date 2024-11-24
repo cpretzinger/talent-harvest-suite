@@ -46,7 +46,13 @@ export const KPIGrid: React.FC = () => {
         .limit(1);
 
       if (data?.[0]) {
-        setKpis(data[0]);
+        const transformedData: Record<string, KPIData> = {
+          active_producers: data[0].active_producers as KPIData,
+          monthly_revenue: data[0].monthly_revenue as KPIData,
+          completion_rate: data[0].completion_rate as KPIData,
+          system_health: data[0].system_health as KPIData
+        };
+        setKpis(transformedData);
       }
     };
 

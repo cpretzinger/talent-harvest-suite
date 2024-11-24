@@ -13,7 +13,7 @@ export const AdminDashboardDev = () => {
         <AdminHeader />
         <div className="flex items-center justify-between px-6 py-2 bg-yellow-100">
           <div className="flex items-center space-x-2">
-            <Badge variant="warning">DEV</Badge>
+            <Badge variant="secondary">DEV</Badge>
             <span className="text-sm text-yellow-800">Development Environment</span>
           </div>
         </div>

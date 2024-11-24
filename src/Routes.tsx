@@ -8,6 +8,12 @@ import MarketAnalysis from "@/pages/MarketAnalysis";
 import AdminDashboard from "@/pages/AdminDashboard";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 
+const defaultProfile = {
+  naturalStyle: { D: 0, I: 0, S: 0, C: 0 },
+  adaptiveStyle: { D: 0, I: 0, S: 0, C: 0 },
+  values: []
+};
+
 export const AppRoutes = () => {
   return (
     <RouterRoutes>
@@ -16,7 +22,7 @@ export const AppRoutes = () => {
       <Route path="/assessment/:id" element={<AssessmentPage />} />
       <Route 
         path="/assessment-results/:id" 
-        element={<AssessmentResults results={{ scores: {}, dimensional_balance: {}, overall_profile: {} }} />} 
+        element={<AssessmentResults results={{ scores: [], dimensional_balance: {}, overall_profile: defaultProfile }} />} 
       />
       <Route path="/resources" element={<ResourcesPage />} />
       <Route path="/resources/category/:categorySlug" element={<ResourcesPage />} />

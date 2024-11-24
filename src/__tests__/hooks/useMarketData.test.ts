@@ -3,7 +3,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useMarketData } from '@/hooks/useMarketData';
 import { vi } from 'vitest';
 
-// Mock the tanstack-query hook
 vi.mock('@tanstack/react-query', () => ({
   useQuery: vi.fn()
 }));
@@ -27,7 +26,7 @@ describe('useMarketData', () => {
       error: null
     });
 
-    const { result } = renderHook(() => useMarketData());
+    const { result } = renderHook(() => useMarketData(['1', '2']));
 
     expect(result.current.data).toEqual(mockData);
     expect(result.current.isLoading).toBe(false);
@@ -41,7 +40,7 @@ describe('useMarketData', () => {
       error: null
     });
 
-    const { result } = renderHook(() => useMarketData());
+    const { result } = renderHook(() => useMarketData(['1']));
 
     expect(result.current.isLoading).toBe(true);
   });

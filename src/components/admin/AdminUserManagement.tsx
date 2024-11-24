@@ -21,6 +21,8 @@ import {
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
+type UserRole = "administrator" | "recruiter" | "candidate" | "manager";
+
 export function AdminUserManagement() {
   const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
@@ -38,7 +40,7 @@ export function AdminUserManagement() {
     }
   });
 
-  const handleRoleChange = async (userId: string, newRole: "administrator" | "recruiter" | "candidate" | "manager") => {
+  const handleRoleChange = async (userId: string, newRole: UserRole) => {
     const { error } = await supabase
       .from('profiles')
       .update({ role: newRole })
@@ -103,7 +105,7 @@ export function AdminUserManagement() {
                 <TableCell>
                   <Select
                     defaultValue={user.role}
-                    onValueChange={(value) => handleRoleChange(user.id, value)}
+                    onValueChange={(value) => handleRoleChange(user.id, value as UserRole)}
                   >
                     <SelectTrigger className="w-32">
                       <SelectValue />

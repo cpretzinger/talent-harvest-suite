@@ -17,7 +17,10 @@ export const ActivityFeed: React.FC = () => {
         .limit(50);
 
       if (data) {
-        setActivities(data);
+        setActivities(data.map(item => ({
+          ...item,
+          type: item.type as "user" | "system" | "content" | "security"
+        })));
       }
       setIsLoading(false);
     };
@@ -29,7 +32,11 @@ export const ActivityFeed: React.FC = () => {
       .on('postgres_changes', 
         { event: 'INSERT', schema: 'public', table: 'admin_activity_log' },
         payload => {
-          setActivities(current => [payload.new as ActivityItem, ...current].slice(0, 50));
+          const newActivity = {
+            ...payload.new,
+            type: payload.new.type as "user" | "system" | "content" | "security"
+          };
+          setActivities(current => [newActivity, ...current].slice(0, 50));
         }
       )
       .subscribe();
