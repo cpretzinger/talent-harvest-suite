@@ -27,12 +27,11 @@ describe('useMarketData', () => {
     ];
 
     // Mock the Supabase client response
-    const mockedSupabase = supabase as jest.Mocked<typeof supabase>;
-    mockedSupabase.from.mockImplementation(() => ({
+    (supabase.from as any).mockImplementation(() => ({
       select: () => ({
         in: () => Promise.resolve({ data: mockData, error: null })
       })
-    }) as any);
+    }));
 
     const { result } = renderHook(() => useMarketData(['1']), { wrapper });
 
