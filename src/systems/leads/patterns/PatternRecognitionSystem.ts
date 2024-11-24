@@ -6,6 +6,12 @@ interface PatternConfig {
   timeWindow?: number;
 }
 
+interface Pattern {
+  type: string;
+  data: any;
+  confidence: number;
+}
+
 export class PatternRecognitionSystem {
   private patterns: Map<string, Pattern> = new Map();
 
