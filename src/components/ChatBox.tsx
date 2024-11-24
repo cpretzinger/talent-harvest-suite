@@ -149,6 +149,7 @@ export function ChatBox() {
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask me anything about insurance..."
                 disabled={isLoading}
+                className="flex-1"
               />
               <Button type="submit" disabled={isLoading}>
                 <Send className="h-4 w-4" />
