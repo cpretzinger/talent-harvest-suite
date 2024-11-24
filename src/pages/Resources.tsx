@@ -4,6 +4,7 @@ import { CategoryList } from "@/components/resources/CategoryList";
 import { ResourceCard } from "@/components/resources/ResourceCard";
 import { Card } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ResourcesPage() {
   const { categorySlug } = useParams();
@@ -11,8 +12,34 @@ export default function ResourcesPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="container mx-auto py-8">
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-3">
+            <Card className="sticky top-8">
+              <div className="space-y-4 p-4">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+            </Card>
+          </div>
+          <div className="col-span-9">
+            <Skeleton className="h-12 w-64 mb-6" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Card key={i} className="h-[200px]">
+                  <div className="p-6 space-y-4">
+                    <Skeleton className="h-6 w-3/4" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-2/3" />
+                    <Skeleton className="h-10 w-full mt-4" />
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
