@@ -26,13 +26,13 @@ describe('useMarketData', () => {
       { id: '1', name: 'New York', population: 8000000 }
     ];
 
-    // Type assertion to access mocked methods
-    const mockedSupabase = vi.mocked(supabase);
+    // Mock the Supabase client response
+    const mockedSupabase = supabase as jest.Mocked<typeof supabase>;
     mockedSupabase.from.mockImplementation(() => ({
       select: () => ({
         in: () => Promise.resolve({ data: mockData, error: null })
       })
-    } as any));
+    }) as any);
 
     const { result } = renderHook(() => useMarketData(['1']), { wrapper });
 
