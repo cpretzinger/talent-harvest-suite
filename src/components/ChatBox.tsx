@@ -45,26 +45,22 @@ export function ChatBox() {
     setIsLoading(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke("ml-model", {
-        body: JSON.stringify({
-          action: "predict",
-          data: {
-            message: input,
-          },
-        }),
+      const { data, error } = await supabase.functions.invoke("chat-completion", {
+        body: JSON.stringify({ message: input }),
       });
 
       if (error) throw error;
 
       const aiMessage: Message = {
         id: crypto.randomUUID(),
-        content: data.prediction.response,
+        content: data.response,
         isUser: false,
         timestamp: new Date(),
       };
 
       setMessages((prev) => [...prev, aiMessage]);
     } catch (error) {
+      console.error('Chat error:', error);
       toast({
         variant: "destructive",
         title: "Error",
@@ -98,7 +94,7 @@ export function ChatBox() {
       <div className="fixed right-4 bottom-4 w-96 z-50 transition-transform duration-75">
         <Card className="flex flex-col h-[600px] border-2 shadow-xl">
           <div className="p-4 border-b bg-primary text-primary-foreground drag-handle cursor-move flex justify-between items-center select-none">
-            <h2 className="text-lg font-semibold">Hire Questions</h2>
+            <h2 className="text-lg font-semibold">Insurance Assistant</h2>
             <Button
               variant="ghost"
               size="icon"
@@ -140,7 +136,7 @@ export function ChatBox() {
               <Input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Type your message..."
+                placeholder="Ask me anything about insurance..."
                 disabled={isLoading}
               />
               <Button type="submit" disabled={isLoading}>
