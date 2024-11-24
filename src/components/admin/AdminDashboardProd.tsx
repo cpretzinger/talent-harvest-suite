@@ -1,6 +1,6 @@
 import { AdminSidebar } from "./AdminSidebar";
 import { AdminHeader } from "./AdminHeader";
-import { AdminOverview } from "./AdminOverview";
+import { DashboardWidgets } from "./widgets/DashboardWidgets";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const AdminDashboardProd = () => {
@@ -19,7 +19,7 @@ export const AdminDashboardProd = () => {
               </TabsList>
 
               <TabsContent value="overview">
-                <AdminOverview />
+                <DashboardWidgets />
               </TabsContent>
               
               <TabsContent value="users">

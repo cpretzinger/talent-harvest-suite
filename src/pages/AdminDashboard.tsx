@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { AdminDashboardDev } from "@/components/admin/AdminDashboardDev";
 import { AdminDashboardProd } from "@/components/admin/AdminDashboardProd";
+import { DashboardWidgets } from "@/components/admin/widgets/DashboardWidgets";
 import { Loader2 } from "lucide-react";
 
 export default function AdminDashboard() {

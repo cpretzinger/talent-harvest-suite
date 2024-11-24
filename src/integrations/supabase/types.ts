@@ -9,6 +9,71 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      admin_activity_log: {
+        Row: {
+          action: string
+          description: string
+          id: string
+          metadata: Json | null
+          timestamp: string
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          description: string
+          id?: string
+          metadata?: Json | null
+          timestamp?: string
+          type: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          description?: string
+          id?: string
+          metadata?: Json | null
+          timestamp?: string
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_activity_log_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      admin_kpis: {
+        Row: {
+          active_producers: Json
+          completion_rate: Json
+          created_at: string
+          id: string
+          monthly_revenue: Json
+          system_health: Json
+        }
+        Insert: {
+          active_producers?: Json
+          completion_rate?: Json
+          created_at?: string
+          id?: string
+          monthly_revenue?: Json
+          system_health?: Json
+        }
+        Update: {
+          active_producers?: Json
+          completion_rate?: Json
+          created_at?: string
+          id?: string
+          monthly_revenue?: Json
+          system_health?: Json
+        }
+        Relationships: []
+      }
       assessment_invitations: {
         Row: {
           assessment_id: string
