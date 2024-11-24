@@ -6,6 +6,7 @@ import { MarketSelector } from "./MarketSelector";
 import { ComparisonView } from "./ComparisonView";
 import { Market } from "@/types/market";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LoadingSpinner } from "@/components/assessment/AssessmentStateDisplay";
 
 export function MarketComparisonTool() {
   const [selectedMarkets, setSelectedMarkets] = useState<Market[]>([]);
@@ -25,26 +26,26 @@ export function MarketComparisonTool() {
           demographics: {
             population: market.population,
             medianIncome: Number(market.median_income),
-            medianAge: 35, // Default value since not in DB
-            householdSize: 3, // Default value since not in DB
+            medianAge: 35,
+            householdSize: 3,
             educationLevel: {}
           },
           insurance: {
             penetration: Number(market.insurance_penetration),
-            averagePremium: 1200, // Default value since not in DB
+            averagePremium: 1200,
             lapsedPolicies: 0,
             marketSize: market.population * Number(market.insurance_penetration)
           },
           competition: {
             agentDensity: Number(market.competitor_density),
-            carrierCount: 10, // Default value since not in DB
+            carrierCount: 10,
             marketShare: {},
             averageProduction: 0
           },
           growth: {
             populationGrowth: Number(market.growth_rate),
-            incomeGrowth: 0.03, // Default value since not in DB
-            businessGrowth: 0.04, // Default value since not in DB
+            incomeGrowth: 0.03,
+            businessGrowth: 0.04,
             developmentIndex: Number(market.growth_rate)
           }
         };
@@ -62,7 +63,7 @@ export function MarketComparisonTool() {
   };
 
   if (isLoading) {
-    return <div>Loading market data...</div>;
+    return <LoadingSpinner />;
   }
 
   return (
