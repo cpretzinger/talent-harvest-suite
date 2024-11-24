@@ -1,3 +1,6 @@
+import { RealtimeChannel } from '@supabase/supabase-js';
+import { supabase } from "@/integrations/supabase/client";
+
 export class UpdateQueue {
   private queue: any[] = [];
   private timer: NodeJS.Timeout | null = null;
@@ -45,3 +48,21 @@ export class UpdateQueue {
     }
   }
 }
+
+export const setupRealtimeUpdates = (onUpdate: (payload: any) => void) => {
+  const channel: RealtimeChannel = supabase.channel('db_changes')
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'producer_daily_metrics'
+      },
+      (payload) => onUpdate(payload)
+    )
+    .subscribe();
+
+  return () => {
+    supabase.removeChannel(channel);
+  };
+};
