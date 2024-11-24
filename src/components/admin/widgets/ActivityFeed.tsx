@@ -26,9 +26,13 @@ export const ActivityFeed = () => {
 
       if (data) {
         setActivities(data.map(item => ({
-          ...item,
+          id: item.id,
           type: item.type as "user" | "system" | "content" | "security",
-          metadata: item.metadata as Record<string, any>
+          action: item.action,
+          description: item.description,
+          timestamp: item.timestamp,
+          metadata: item.metadata as Record<string, any>,
+          user_id: item.user_id
         })));
       }
       setIsLoading(false);
@@ -42,9 +46,13 @@ export const ActivityFeed = () => {
         { event: 'INSERT', schema: 'public', table: 'admin_activity_log' },
         payload => {
           const newActivity: ActivityItem = {
-            ...payload.new,
+            id: payload.new.id,
             type: payload.new.type as "user" | "system" | "content" | "security",
-            metadata: payload.new.metadata as Record<string, any>
+            action: payload.new.action,
+            description: payload.new.description,
+            timestamp: payload.new.timestamp,
+            metadata: payload.new.metadata as Record<string, any>,
+            user_id: payload.new.user_id
           };
           setActivities(current => [newActivity, ...current].slice(0, 50));
         }

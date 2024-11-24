@@ -22,7 +22,7 @@ export const AppRoutes = () => {
       <Route path="/assessment/:id" element={<AssessmentPage />} />
       <Route 
         path="/assessment-results/:id" 
-        element={<AssessmentResults results={{ dimensional_balance: {}, overall_profile: defaultProfile }} />} 
+        element={<AssessmentResults results={{ overall_profile: defaultProfile }} />} 
       />
       <Route path="/resources" element={<ResourcesPage />} />
       <Route path="/resources/category/:categorySlug" element={<ResourcesPage />} />
