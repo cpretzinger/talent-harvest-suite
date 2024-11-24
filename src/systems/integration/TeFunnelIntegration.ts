@@ -8,8 +8,8 @@ interface TeFunnelConfig {
 
 interface IntegrationResult {
   success: boolean;
-  integratedLeads: any[];
-  failedLeads: any[];
+  integratedLeads: LeadData[];
+  failedLeads: LeadData[];
   messages: string[];
 }
 
@@ -45,7 +45,7 @@ export class TeFunnelIntegration {
   }
 
   private async validateConnection(): Promise<void> {
-    // Implementation
+    // Implementation placeholder
   }
 
   private transformLeadsForTeFunnel(leads: LeadData[]): any[] {
@@ -53,12 +53,16 @@ export class TeFunnelIntegration {
   }
 
   private mapLeadToTeFunnelFormat(lead: LeadData): any {
-    // Implementation
+    // Implementation placeholder
     return {};
   }
 
-  private async sendToTeFunnel(leads: any[]): Promise<any> {
-    // Implementation
+  private async sendToTeFunnel(leads: any[]): Promise<{
+    successful: LeadData[];
+    failed: LeadData[];
+    messages: string[];
+  }> {
+    // Implementation placeholder
     return {
       successful: [],
       failed: [],

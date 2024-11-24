@@ -33,11 +33,13 @@ export class CustomFieldManager {
       .eq('agency_id', agencyId);
 
     if (error) throw error;
-    return data;
+    return data as CustomField[];
   }
 
   private async validateFieldConfig(config: CustomFieldConfig): Promise<void> {
-    // Implementation
+    if (!config.name || !config.type) {
+      throw new Error('Name and type are required');
+    }
   }
 
   private async createCustomField(
@@ -58,14 +60,6 @@ export class CustomFieldManager {
       .single();
 
     if (error) throw error;
-    return data;
-  }
-
-  async migrateData(
-    agencyId: string,
-    fieldId: string,
-    data: any[]
-  ): Promise<void> {
-    // Implementation for data migration
+    return data as CustomField;
   }
 }

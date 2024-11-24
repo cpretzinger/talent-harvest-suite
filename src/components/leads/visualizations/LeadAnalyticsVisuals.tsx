@@ -21,6 +21,11 @@ export const LeadAnalyticsVisuals: React.FC<LeadAnalyticsProps> = ({
   );
 };
 
+interface FunnelData {
+  stage: string;
+  value: number;
+}
+
 const ConversionFunnelChart: React.FC<{ data: LeadData[] }> = ({ data }) => {
   const funnelData = useMemo(() => prepareFunnelData(data), [data]);
 
@@ -45,21 +50,21 @@ const ConversionFunnelChart: React.FC<{ data: LeadData[] }> = ({ data }) => {
 };
 
 const TimeToConversionGraph: React.FC<{ data: LeadData[] }> = ({ data }) => {
-  // Implementation
   return <div>Time to Conversion Graph</div>;
 };
 
 const EngagementHeatmap: React.FC<{ data: LeadData[] }> = ({ data }) => {
-  // Implementation
   return <div>Engagement Heatmap</div>;
 };
 
 const PatternCorrelationMatrix: React.FC<{ patterns: any }> = ({ patterns }) => {
-  // Implementation
   return <div>Pattern Correlation Matrix</div>;
 };
 
-const prepareFunnelData = (data: LeadData[]) => {
-  // Implementation
-  return [];
+const prepareFunnelData = (data: LeadData[]): FunnelData[] => {
+  const stages = ['New', 'Contacted', 'Qualified', 'Proposal', 'Closed'];
+  return stages.map(stage => ({
+    stage,
+    value: data.filter(lead => lead.pipeline_stage === stage.toLowerCase()).length
+  }));
 };
