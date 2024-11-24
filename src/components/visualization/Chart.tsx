@@ -1,7 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ChartConfig } from '@/systems/visualization/types';
 import { VisualizationSystem } from '@/systems/visualization/VisualizationSystem';
-import { ResponsiveContainer, LineChart, Line, BarChart, Bar, ScatterChart, Scatter, PieChart, Pie, RadarChart, Radar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { 
+  ResponsiveContainer, 
+  LineChart, 
+  Line, 
+  BarChart, 
+  Bar, 
+  ScatterChart, 
+  Scatter, 
+  PieChart, 
+  Pie, 
+  RadarChart, 
+  Radar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  Legend,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis
+} from 'recharts';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { ZoomIn, ZoomOut, Move, RotateCcw } from 'lucide-react';
@@ -112,6 +132,8 @@ export const Chart: React.FC<ChartProps> = ({
         return (
           <RadarChart cx="50%" cy="50%" outerRadius="80%" data={localData}>
             <PolarGrid />
+            <PolarAngleAxis dataKey="name" />
+            <PolarRadiusAxis />
             <Tooltip />
             <Legend />
             <Radar name="Data" dataKey="value" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
