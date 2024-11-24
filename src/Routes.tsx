@@ -10,6 +10,7 @@ import { ProtectedRoute } from "@/components/ProtectedRoute";
 import { AdminUserManagement } from "@/components/admin/AdminUserManagement";
 import { AdminSettings } from "@/components/admin/AdminSettings";
 import { AdminAuditLogs } from "@/components/admin/AdminAuditLogs";
+import { AdminOverview } from "@/components/admin/AdminOverview";
 
 const defaultProfile = {
   naturalStyle: { D: 0, I: 0, S: 0, C: 0 },
@@ -40,7 +41,7 @@ export const AppRoutes = () => {
           </ProtectedRoute>
         }
       >
-        <Route index element={<AdminDashboard />} />
+        <Route index element={<AdminOverview />} />
         <Route path="users" element={<AdminUserManagement />} />
         <Route path="settings" element={<AdminSettings />} />
         <Route path="audit" element={<AdminAuditLogs />} />
