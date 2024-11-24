@@ -63,13 +63,13 @@ export function MarketComparisonTool() {
   };
 
   if (isLoading) {
-    return <LoadingSpinner />;
+    return <LoadingSpinner message="Loading Market Data" />;
   }
 
   return (
     <div className="space-y-6">
-      <Card className="p-6">
-        <h2 className="text-2xl font-bold mb-4">Market Comparison Tool</h2>
+      <Card className="p-6 bg-card/50 backdrop-blur border-border/50">
+        <h2 className="text-2xl font-bold mb-4 text-primary">Market Comparison Tool</h2>
         <MarketSelector
           selectedMarkets={selectedMarkets}
           onMarketSelect={handleMarketSelect}
@@ -79,7 +79,7 @@ export function MarketComparisonTool() {
 
       {selectedMarkets.length > 0 && marketData && (
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList>
+          <TabsList className="bg-background/95 backdrop-blur">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="detailed">Detailed Analysis</TabsTrigger>
             <TabsTrigger value="opportunity">Opportunity Analysis</TabsTrigger>
