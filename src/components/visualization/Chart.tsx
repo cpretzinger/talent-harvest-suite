@@ -1,15 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ChartConfig } from '@/systems/visualization/types';
 import { VisualizationSystem } from '@/systems/visualization/VisualizationSystem';
-import { ResponsiveContainer } from 'recharts';
+import { ResponsiveContainer, LineChart, Line, BarChart, Bar, ScatterChart, Scatter, PieChart, Pie, RadarChart, Radar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { 
-  ZoomIn, 
-  ZoomOut, 
-  Move, 
-  RotateCcw 
-} from 'lucide-react';
+import { ZoomIn, ZoomOut, Move, RotateCcw } from 'lucide-react';
 
 interface ChartProps extends ChartConfig {
   className?: string;
@@ -28,6 +23,7 @@ export const Chart: React.FC<ChartProps> = ({
   title
 }) => {
   const [chartId, setChartId] = useState<string | null>(null);
+  const [localData, setLocalData] = useState(data);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -40,6 +36,13 @@ export const Chart: React.FC<ChartProps> = ({
         updates
       });
       setChartId(id);
+
+      // Subscribe to updates if real-time is enabled
+      if (updates?.realtime) {
+        visualizationSystem.getEventSystem().on('chartUpdate', ({ data: newData }) => {
+          setLocalData(newData);
+        });
+      }
     }
 
     return () => {
@@ -50,10 +53,74 @@ export const Chart: React.FC<ChartProps> = ({
   }, []);
 
   useEffect(() => {
-    if (chartId) {
-      visualizationSystem.updateChart(chartId, data);
-    }
+    setLocalData(data);
   }, [data]);
+
+  const renderChart = () => {
+    switch (type) {
+      case 'line':
+        return (
+          <LineChart data={localData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="value" stroke="#8884d8" />
+          </LineChart>
+        );
+      case 'bar':
+        return (
+          <BarChart data={localData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="value" fill="#8884d8" />
+          </BarChart>
+        );
+      case 'scatter':
+        return (
+          <ScatterChart>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="x" />
+            <YAxis dataKey="y" />
+            <Tooltip />
+            <Legend />
+            <Scatter name="Data" data={localData} fill="#8884d8" />
+          </ScatterChart>
+        );
+      case 'pie':
+        return (
+          <PieChart>
+            <Pie
+              data={localData}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              outerRadius={80}
+              fill="#8884d8"
+              label
+            />
+            <Tooltip />
+            <Legend />
+          </PieChart>
+        );
+      case 'radar':
+        return (
+          <RadarChart cx="50%" cy="50%" outerRadius="80%" data={localData}>
+            <PolarGrid />
+            <Tooltip />
+            <Legend />
+            <Radar name="Data" dataKey="value" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+          </RadarChart>
+        );
+      default:
+        return null;
+    }
+  };
 
   return (
     <Card className={`p-4 ${className}`}>
@@ -80,7 +147,7 @@ export const Chart: React.FC<ChartProps> = ({
       )}
       <div ref={containerRef} className="h-[400px]">
         <ResponsiveContainer width="100%" height="100%">
-          <div>Chart content will be rendered here by the visualization system</div>
+          {renderChart()}
         </ResponsiveContainer>
       </div>
     </Card>

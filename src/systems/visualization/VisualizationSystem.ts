@@ -28,6 +28,7 @@ export class VisualizationSystem {
               duration: 500,
               easing: 'easeInOutQuad'
             });
+            this.eventSystem.emit('chartUpdate', { chartId: update.chartId, data: update.data });
           }
         });
       }
@@ -52,7 +53,6 @@ export class VisualizationSystem {
   createChart(config: ChartConfig): string {
     const chartId = crypto.randomUUID();
     
-    // Initialize chart instance based on type
     const chart = {
       id: chartId,
       updateData: (data: any, options: any) => {

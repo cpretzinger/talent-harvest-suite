@@ -8,6 +8,6 @@ interface ProtectedRouteProps {
 export const ProtectedRoute = ({
   children,
 }: ProtectedRouteProps) => {
-  // Temporarily disabled auth checks
+  // Temporarily disabled auth checks for development
   return <>{children}</>;
 };
