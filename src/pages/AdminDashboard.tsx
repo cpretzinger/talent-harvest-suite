@@ -1,9 +1,8 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { AdminDashboardDev } from "@/components/admin/AdminDashboardDev";
 import { AdminDashboardProd } from "@/components/admin/AdminDashboardProd";
-import { DashboardWidgets } from "@/components/admin/widgets/DashboardWidgets";
 import { Loader2 } from "lucide-react";
 
 export default function AdminDashboard() {
@@ -25,5 +24,11 @@ export default function AdminDashboard() {
     );
   }
 
-  return isDevelopment ? <AdminDashboardDev /> : <AdminDashboardProd />;
+  // Render the appropriate dashboard with Outlet for nested routes
+  return (
+    <>
+      {isDevelopment ? <AdminDashboardDev /> : <AdminDashboardProd />}
+      <Outlet />
+    </>
+  );
 }
