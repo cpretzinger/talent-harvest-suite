@@ -1,4 +1,4 @@
-import { Demographics, MarketMetrics } from '@/types/market';
+import { MarketMetrics } from '@/types/market';
 
 interface MarketScore {
   overall: number;
@@ -29,9 +29,9 @@ export class MarketScoringSystem {
 
   static calculateMarketScore(metrics: MarketMetrics): MarketScore {
     const scores = {
-      growth: this.calculateGrowthScore(metrics.growth),
-      competition: this.calculateCompetitionScore(metrics.competition),
-      marketSize: this.calculateMarketSizeScore(metrics.marketSize),
+      growth: this.calculateGrowthScore(metrics.growth.populationGrowth),
+      competition: this.calculateCompetitionScore(metrics.competition.agentDensity),
+      marketSize: this.calculateMarketSizeScore(metrics.demographics.population),
       demographics: this.calculateDemographicsScore(metrics.demographics)
     };
 
@@ -63,17 +63,15 @@ export class MarketScoringSystem {
     return Math.min(marketSize / this.THRESHOLDS.largeMarket, 1);
   }
 
-  private static calculateDemographicsScore(demographics: Demographics): number {
+  private static calculateDemographicsScore(demographics: MarketMetrics['demographics']): number {
     const incomeScore = Math.min(demographics.medianIncome / this.THRESHOLDS.highIncome, 1);
     const populationScore = Math.min(demographics.population / this.THRESHOLDS.largeMarket, 1);
     return (incomeScore + populationScore) / 2;
   }
 
   private static calculateConfidenceScore(metrics: MarketMetrics): number {
-    // Calculate confidence based on data completeness and reliability
-    const hasAllMetrics = !Object.values(metrics).some(value => value === undefined || value === null);
-    const hasRecentData = true; // This could be enhanced with timestamp checks
-    return hasAllMetrics && hasRecentData ? 0.9 : 0.7;
+    const hasAllMetrics = Object.values(metrics).every(value => value !== undefined && value !== null);
+    return hasAllMetrics ? 0.9 : 0.7;
   }
 
   private static generateScoreBasedRecommendations(scores: Record<string, number>): string[] {

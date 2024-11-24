@@ -38,7 +38,7 @@ export function AdminUserManagement() {
     }
   });
 
-  const handleRoleChange = async (userId: string, newRole: string) => {
+  const handleRoleChange = async (userId: string, newRole: "administrator" | "recruiter" | "candidate" | "manager") => {
     const { error } = await supabase
       .from('profiles')
       .update({ role: newRole })

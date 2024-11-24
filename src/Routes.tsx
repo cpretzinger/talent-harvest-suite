@@ -14,7 +14,10 @@ export const AppRoutes = () => {
       <Route path="/" element={<Index />} />
       <Route path="/leads" element={<Leads />} />
       <Route path="/assessment/:id" element={<AssessmentPage />} />
-      <Route path="/assessment-results/:id" element={<AssessmentResults />} />
+      <Route 
+        path="/assessment-results/:id" 
+        element={<AssessmentResults results={{ scores: {}, dimensional_balance: {}, overall_profile: {} }} />} 
+      />
       <Route path="/resources" element={<ResourcesPage />} />
       <Route path="/resources/category/:categorySlug" element={<ResourcesPage />} />
       <Route path="/market-analysis" element={<MarketAnalysis />} />
