@@ -3,7 +3,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
 import { Card } from "./ui/card";
-import { Send, X, MessageCircle } from "lucide-react";
+import { Send, X, MessageCircle, RefreshCw } from "lucide-react";
 import { useToast } from "./ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Draggable from "react-draggable";
@@ -16,8 +16,15 @@ interface Message {
   timestamp: Date;
 }
 
+const INITIAL_MESSAGE: Message = {
+  id: "welcome",
+  content: "Hey There! How can we help?",
+  isUser: false,
+  timestamp: new Date(),
+};
+
 export function ChatBox() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -82,6 +89,14 @@ export function ChatBox() {
     }
   };
 
+  const handleEndChat = () => {
+    setMessages([INITIAL_MESSAGE]);
+    toast({
+      title: "Chat Reset",
+      description: "The chat has been reset.",
+    });
+  };
+
   if (!isOpen) {
     return (
       <Button
@@ -106,14 +121,24 @@ export function ChatBox() {
         <Card className="flex flex-col h-[600px] border-2 shadow-xl">
           <div className="p-4 border-b bg-primary text-primary-foreground drag-handle cursor-move flex justify-between items-center select-none">
             <h2 className="text-lg font-semibold">Insurance Assistant</h2>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setIsOpen(false)}
-              className="hover:bg-primary-foreground/20"
-            >
-              <X className="h-4 w-4" />
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleEndChat}
+                className="hover:bg-primary-foreground/20"
+              >
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setIsOpen(false)}
+                className="hover:bg-primary-foreground/20"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
           
           <ScrollArea className="flex-1 p-4">
