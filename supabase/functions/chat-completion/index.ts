@@ -1,5 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { RateLimiter } from "../_shared/rate-limiter.ts";
 
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
@@ -8,6 +9,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+const rateLimiter = new RateLimiter();
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -15,6 +18,20 @@ serve(async (req) => {
   }
 
   try {
+    // Get client IP for rate limiting
+    const clientIp = req.headers.get('x-forwarded-for') || 'unknown';
+    
+    // Check rate limit (100 requests per hour per IP)
+    const isLimited = await rateLimiter.isRateLimited({
+      tokensPerInterval: 100,
+      interval: 60 * 60 * 1000, // 1 hour
+      uniqueTokenKey: `chat-completion:${clientIp}`,
+    });
+
+    if (isLimited) {
+      return RateLimiter.createRateLimitResponse();
+    }
+
     console.log('Received chat request');
     const { message } = await req.json();
     
