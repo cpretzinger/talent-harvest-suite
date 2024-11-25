@@ -12,7 +12,10 @@ serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     console.log('Handling CORS preflight request');
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { 
+      headers: corsHeaders,
+      status: 204
+    });
   }
 
   try {
@@ -23,7 +26,7 @@ serve(async (req) => {
         JSON.stringify({ error: 'OpenAI API key is not configured' }),
         {
           status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          headers: corsHeaders
         }
       );
     }
@@ -41,7 +44,13 @@ serve(async (req) => {
 
     if (isLimited) {
       console.log('Rate limit exceeded for IP:', clientIp);
-      return RateLimiter.createRateLimitResponse();
+      return new Response(
+        JSON.stringify({ error: 'Rate limit exceeded' }),
+        {
+          status: 429,
+          headers: corsHeaders
+        }
+      );
     }
 
     console.log('Parsing request body');
@@ -49,7 +58,13 @@ serve(async (req) => {
     
     if (!message) {
       console.error('No message provided in request');
-      throw new Error('Message is required');
+      return new Response(
+        JSON.stringify({ error: 'Message is required' }),
+        {
+          status: 400,
+          headers: corsHeaders
+        }
+      );
     }
 
     console.log('Received message:', message);
@@ -70,7 +85,7 @@ serve(async (req) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          model: 'gpt-4o-mini',
+          model: 'gpt-4',
           messages: [
             { 
               role: 'system', 
@@ -90,29 +105,13 @@ serve(async (req) => {
       if (!response.ok) {
         const errorData = await response.json();
         console.error('OpenAI API error:', errorData);
-        
-        // Handle specific OpenAI error cases
-        if (response.status === 401) {
-          return new Response(
-            JSON.stringify({ error: 'Invalid OpenAI API key' }),
-            {
-              status: 401,
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            }
-          );
-        }
-        
-        if (response.status === 429) {
-          return new Response(
-            JSON.stringify({ error: 'OpenAI rate limit exceeded' }),
-            {
-              status: 429,
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            }
-          );
-        }
-        
-        throw new Error(errorData.error?.message || 'Failed to get response from OpenAI');
+        return new Response(
+          JSON.stringify({ error: errorData.error?.message || 'Failed to get response from OpenAI' }),
+          {
+            status: response.status,
+            headers: corsHeaders
+          }
+        );
       }
 
       const data = await response.json();
@@ -120,15 +119,19 @@ serve(async (req) => {
       
       if (!data.choices?.[0]?.message?.content) {
         console.error('Invalid response format from OpenAI:', data);
-        throw new Error('Invalid response format from OpenAI');
+        return new Response(
+          JSON.stringify({ error: 'Invalid response format from OpenAI' }),
+          {
+            status: 500,
+            headers: corsHeaders
+          }
+        );
       }
 
       console.log('Sending successful response back to client');
       return new Response(
-        JSON.stringify({ response: data.choices[0].message.content }), 
-        {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
+        JSON.stringify({ response: data.choices[0].message.content }),
+        { headers: corsHeaders }
       );
     } catch (error) {
       if (error.name === 'AbortError') {
@@ -137,7 +140,7 @@ serve(async (req) => {
           JSON.stringify({ error: 'Request timed out after 25 seconds' }),
           {
             status: 504,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            headers: corsHeaders
           }
         );
       }
@@ -151,7 +154,7 @@ serve(async (req) => {
       JSON.stringify({ error: error.message }),
       {
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: corsHeaders
       }
     );
   }
