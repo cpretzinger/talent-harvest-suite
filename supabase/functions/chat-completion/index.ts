@@ -33,70 +33,49 @@ serve(async (req) => {
 
     console.log('Processing message:', message);
 
-    // Create AbortController for timeout
-    const controller = new AbortController();
-    const timeout = setTimeout(() => {
-      controller.abort();
-      console.log('Request timed out after 25 seconds');
-    }, 25000);
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${openAIApiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a helpful insurance agency assistant. Provide clear, concise answers about insurance-related topics and agency operations.'
+          },
+          { role: 'user', content: message }
+        ],
+        temperature: 0.7,
+        max_tokens: 500,
+      }),
+    });
 
-    try {
-      // Make request to OpenAI
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${openAIApiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'gpt-4o-mini',
-          messages: [
-            {
-              role: 'system',
-              content: 'You are a helpful insurance agency assistant. Provide clear, concise answers about insurance-related topics and agency operations.'
-            },
-            { role: 'user', content: message }
-          ],
-          temperature: 0.7,
-          max_tokens: 500,
-        }),
-        signal: controller.signal,
-      });
-
-      clearTimeout(timeout);
-
-      if (!response.ok) {
-        const error = await response.json();
-        console.error('OpenAI API error:', error);
-        throw new Error(error.error?.message || 'Failed to get response from OpenAI');
-      }
-
-      const data = await response.json();
-      console.log('Received response from OpenAI');
-
-      if (!data.choices?.[0]?.message?.content) {
-        console.error('Invalid response format from OpenAI:', data);
-        throw new Error('Invalid response format from OpenAI');
-      }
-
-      return new Response(
-        JSON.stringify({ response: data.choices[0].message.content }),
-        { 
-          headers: { 
-            ...corsHeaders,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-
-    } catch (error) {
-      if (error.name === 'AbortError') {
-        throw new Error('Request timed out after 25 seconds');
-      }
-      throw error;
-    } finally {
-      clearTimeout(timeout);
+    if (!response.ok) {
+      const error = await response.json();
+      console.error('OpenAI API error:', error);
+      throw new Error(error.error?.message || 'Failed to get response from OpenAI');
     }
+
+    const data = await response.json();
+    console.log('Received response from OpenAI');
+
+    if (!data.choices?.[0]?.message?.content) {
+      console.error('Invalid response format from OpenAI:', data);
+      throw new Error('Invalid response format from OpenAI');
+    }
+
+    return new Response(
+      JSON.stringify({ response: data.choices[0].message.content }),
+      { 
+        headers: { 
+          ...corsHeaders,
+          'Content-Type': 'application/json'
+        }
+      }
+    );
 
   } catch (error) {
     console.error('Error in chat completion function:', error);
