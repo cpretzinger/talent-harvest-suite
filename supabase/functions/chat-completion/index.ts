@@ -1,10 +1,8 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { RateLimiter } from "../_shared/rate-limiter.ts";
 import { corsHeaders } from "../_shared/cors.ts";
 
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
-const rateLimiter = new RateLimiter();
 
 serve(async (req) => {
   console.log('Chat completion function started');
@@ -22,62 +20,28 @@ serve(async (req) => {
     // Validate OpenAI API key
     if (!openAIApiKey) {
       console.error('OpenAI API key is not configured');
-      return new Response(
-        JSON.stringify({ error: 'OpenAI API key is not configured' }),
-        {
-          status: 500,
-          headers: corsHeaders
-        }
-      );
+      throw new Error('OpenAI API key is not configured');
     }
 
-    // Get client IP for rate limiting
-    const clientIp = req.headers.get('x-forwarded-for') || 'unknown';
-    console.log('Client IP:', clientIp);
-    
-    // Check rate limit (100 requests per hour per IP)
-    const isLimited = await rateLimiter.isRateLimited({
-      tokensPerInterval: 100,
-      interval: 60 * 60 * 1000, // 1 hour
-      uniqueTokenKey: `chat-completion:${clientIp}`,
-    });
-
-    if (isLimited) {
-      console.log('Rate limit exceeded for IP:', clientIp);
-      return new Response(
-        JSON.stringify({ error: 'Rate limit exceeded' }),
-        {
-          status: 429,
-          headers: corsHeaders
-        }
-      );
-    }
-
-    console.log('Parsing request body');
+    // Parse and validate request body
     const { message } = await req.json();
     
     if (!message) {
       console.error('No message provided in request');
-      return new Response(
-        JSON.stringify({ error: 'Message is required' }),
-        {
-          status: 400,
-          headers: corsHeaders
-        }
-      );
+      throw new Error('Message is required');
     }
 
-    console.log('Received message:', message);
+    console.log('Processing message:', message);
 
     // Create AbortController for timeout
     const controller = new AbortController();
     const timeout = setTimeout(() => {
       controller.abort();
       console.log('Request timed out after 25 seconds');
-    }, 25000); // 25 second timeout
+    }, 25000);
 
     try {
-      console.log('Sending request to OpenAI...');
+      // Make request to OpenAI
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -87,9 +51,9 @@ serve(async (req) => {
         body: JSON.stringify({
           model: 'gpt-4o-mini',
           messages: [
-            { 
-              role: 'system', 
-              content: 'You are a helpful insurance agency assistant. Provide clear, concise answers about insurance-related topics and agency operations.' 
+            {
+              role: 'system',
+              content: 'You are a helpful insurance agency assistant. Provide clear, concise answers about insurance-related topics and agency operations.'
             },
             { role: 'user', content: message }
           ],
@@ -100,61 +64,51 @@ serve(async (req) => {
       });
 
       clearTimeout(timeout);
-      console.log('Received response from OpenAI');
 
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error('OpenAI API error:', errorData);
-        return new Response(
-          JSON.stringify({ error: errorData.error?.message || 'Failed to get response from OpenAI' }),
-          {
-            status: response.status,
-            headers: corsHeaders
-          }
-        );
+        const error = await response.json();
+        console.error('OpenAI API error:', error);
+        throw new Error(error.error?.message || 'Failed to get response from OpenAI');
       }
 
       const data = await response.json();
-      console.log('Successfully parsed OpenAI response');
-      
+      console.log('Received response from OpenAI');
+
       if (!data.choices?.[0]?.message?.content) {
         console.error('Invalid response format from OpenAI:', data);
-        return new Response(
-          JSON.stringify({ error: 'Invalid response format from OpenAI' }),
-          {
-            status: 500,
-            headers: corsHeaders
-          }
-        );
+        throw new Error('Invalid response format from OpenAI');
       }
 
-      console.log('Sending successful response back to client');
       return new Response(
         JSON.stringify({ response: data.choices[0].message.content }),
-        { headers: corsHeaders }
+        { 
+          headers: { 
+            ...corsHeaders,
+            'Content-Type': 'application/json'
+          }
+        }
       );
+
     } catch (error) {
       if (error.name === 'AbortError') {
-        console.error('Request timed out');
-        return new Response(
-          JSON.stringify({ error: 'Request timed out after 25 seconds' }),
-          {
-            status: 504,
-            headers: corsHeaders
-          }
-        );
+        throw new Error('Request timed out after 25 seconds');
       }
       throw error;
     } finally {
       clearTimeout(timeout);
     }
+
   } catch (error) {
-    console.error('Error in chat-completion function:', error);
+    console.error('Error in chat completion function:', error);
+    
     return new Response(
       JSON.stringify({ error: error.message }),
       {
-        status: 500,
-        headers: corsHeaders
+        status: error.message.includes('API key') ? 500 : 400,
+        headers: { 
+          ...corsHeaders,
+          'Content-Type': 'application/json'
+        }
       }
     );
   }
