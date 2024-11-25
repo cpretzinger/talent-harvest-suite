@@ -51,69 +51,94 @@ serve(async (req) => {
       throw new Error('Message is required');
     }
 
-    console.log('Sending request to OpenAI...');
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { 
-            role: 'system', 
-            content: 'You are a helpful insurance agency assistant. Provide clear, concise answers about insurance-related topics and agency operations.' 
-          },
-          { role: 'user', content: message }
-        ],
-        temperature: 0.7,
-        max_tokens: 500,
-      }),
-    });
+    // Create AbortController for timeout
+    const controller = new AbortController();
+    const timeout = setTimeout(() => {
+      controller.abort();
+    }, 25000); // 25 second timeout
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('OpenAI API error:', errorData);
+    try {
+      console.log('Sending request to OpenAI...');
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${openAIApiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'gpt-4o-mini',
+          messages: [
+            { 
+              role: 'system', 
+              content: 'You are a helpful insurance agency assistant. Provide clear, concise answers about insurance-related topics and agency operations.' 
+            },
+            { role: 'user', content: message }
+          ],
+          temperature: 0.7,
+          max_tokens: 500,
+        }),
+        signal: controller.signal,
+      });
+
+      clearTimeout(timeout);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('OpenAI API error:', errorData);
+        
+        // Handle specific OpenAI error cases
+        if (response.status === 401) {
+          return new Response(
+            JSON.stringify({ error: 'Invalid OpenAI API key' }),
+            {
+              status: 401,
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            }
+          );
+        }
+        
+        if (response.status === 429) {
+          return new Response(
+            JSON.stringify({ error: 'OpenAI rate limit exceeded' }),
+            {
+              status: 429,
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            }
+          );
+        }
+        
+        throw new Error(errorData.error?.message || 'Failed to get response from OpenAI');
+      }
+
+      const data = await response.json();
       
-      // Handle specific OpenAI error cases
-      if (response.status === 401) {
+      if (!data.choices?.[0]?.message?.content) {
+        console.error('Invalid response format from OpenAI:', data);
+        throw new Error('Invalid response format from OpenAI');
+      }
+
+      console.log('Successfully got response from OpenAI');
+      return new Response(
+        JSON.stringify({ response: data.choices[0].message.content }), 
+        {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        console.error('Request timed out');
         return new Response(
-          JSON.stringify({ error: 'Invalid OpenAI API key' }),
+          JSON.stringify({ error: 'Request timed out after 25 seconds' }),
           {
-            status: 401,
+            status: 504,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
           }
         );
       }
-      
-      if (response.status === 429) {
-        return new Response(
-          JSON.stringify({ error: 'OpenAI rate limit exceeded' }),
-          {
-            status: 429,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          }
-        );
-      }
-      
-      throw new Error(errorData.error?.message || 'Failed to get response from OpenAI');
+      throw error;
+    } finally {
+      clearTimeout(timeout);
     }
-
-    const data = await response.json();
-    
-    if (!data.choices?.[0]?.message?.content) {
-      console.error('Invalid response format from OpenAI:', data);
-      throw new Error('Invalid response format from OpenAI');
-    }
-
-    console.log('Successfully got response from OpenAI');
-    return new Response(
-      JSON.stringify({ response: data.choices[0].message.content }), 
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
   } catch (error) {
     console.error('Error in chat-completion function:', error);
     return new Response(
