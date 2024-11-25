@@ -12,8 +12,11 @@ const corsHeaders = {
 const rateLimiter = new RateLimiter();
 
 serve(async (req) => {
+  console.log('Chat completion function started');
+  
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
+    console.log('Handling CORS preflight request');
     return new Response(null, { headers: corsHeaders });
   }
 
@@ -32,6 +35,7 @@ serve(async (req) => {
 
     // Get client IP for rate limiting
     const clientIp = req.headers.get('x-forwarded-for') || 'unknown';
+    console.log('Client IP:', clientIp);
     
     // Check rate limit (100 requests per hour per IP)
     const isLimited = await rateLimiter.isRateLimited({
@@ -41,20 +45,25 @@ serve(async (req) => {
     });
 
     if (isLimited) {
+      console.log('Rate limit exceeded for IP:', clientIp);
       return RateLimiter.createRateLimitResponse();
     }
 
-    console.log('Received chat request');
+    console.log('Parsing request body');
     const { message } = await req.json();
     
     if (!message) {
+      console.error('No message provided in request');
       throw new Error('Message is required');
     }
+
+    console.log('Received message:', message);
 
     // Create AbortController for timeout
     const controller = new AbortController();
     const timeout = setTimeout(() => {
       controller.abort();
+      console.log('Request timed out after 25 seconds');
     }, 25000); // 25 second timeout
 
     try {
@@ -81,6 +90,7 @@ serve(async (req) => {
       });
 
       clearTimeout(timeout);
+      console.log('Received response from OpenAI');
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -111,13 +121,14 @@ serve(async (req) => {
       }
 
       const data = await response.json();
+      console.log('Successfully parsed OpenAI response');
       
       if (!data.choices?.[0]?.message?.content) {
         console.error('Invalid response format from OpenAI:', data);
         throw new Error('Invalid response format from OpenAI');
       }
 
-      console.log('Successfully got response from OpenAI');
+      console.log('Sending successful response back to client');
       return new Response(
         JSON.stringify({ response: data.choices[0].message.content }), 
         {
