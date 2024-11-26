@@ -30,7 +30,7 @@ export function ChatBox() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isLoading) return;
 
     const userMessage: Message = {
       id: crypto.randomUUID(),
@@ -50,6 +50,9 @@ export function ChatBox() {
 
       if (error) {
         console.error('Supabase Edge Function error:', error);
+        if (error.message.includes('429')) {
+          throw new Error('Too many requests. Please wait a moment before trying again.');
+        }
         throw error;
       }
 
@@ -66,13 +69,17 @@ export function ChatBox() {
       };
 
       setMessages((prev) => [...prev, aiMessage]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Chat error:', error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to get response. Please try again.",
+        description: error.message || "Failed to get response. Please try again.",
       });
+      
+      // Remove the user's message if we couldn't get a response
+      setMessages((prev) => prev.filter(msg => msg.id !== userMessage.id));
+      setInput(userMessage.content); // Restore the user's input
     } finally {
       setIsLoading(false);
     }
@@ -119,6 +126,7 @@ export function ChatBox() {
                 size="icon"
                 onClick={handleEndChat}
                 className="hover:bg-primary-foreground/20"
+                disabled={isLoading}
               >
                 <RefreshCw className="h-4 w-4" />
               </Button>
@@ -127,6 +135,7 @@ export function ChatBox() {
                 size="icon"
                 onClick={() => setIsOpen(false)}
                 className="hover:bg-primary-foreground/20"
+                disabled={isLoading}
               >
                 <X className="h-4 w-4" />
               </Button>
