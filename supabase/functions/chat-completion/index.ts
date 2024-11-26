@@ -8,32 +8,6 @@ const corsHeaders = {
 
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
-// Simple in-memory store for rate limiting
-const rateLimits = new Map<string, { count: number; resetTime: number }>();
-
-const isRateLimited = (clientId: string): boolean => {
-  const now = Date.now();
-  const limit = rateLimits.get(clientId);
-  
-  // Reset if time window has passed
-  if (!limit || now > limit.resetTime) {
-    rateLimits.set(clientId, {
-      count: 1,
-      resetTime: now + 60000 // 1 minute window
-    });
-    return false;
-  }
-
-  // Check if over limit
-  if (limit.count >= 5) { // 5 requests per minute
-    return true;
-  }
-
-  // Increment counter
-  limit.count++;
-  return false;
-};
-
 serve(async (req) => {
   console.log('Received request:', req.method);
 
@@ -43,25 +17,6 @@ serve(async (req) => {
   }
 
   try {
-    const clientId = req.headers.get('x-client-info') || 'anonymous';
-    console.log('Client ID:', clientId);
-    
-    // Check rate limit
-    if (isRateLimited(clientId)) {
-      console.log('Rate limit exceeded for client:', clientId);
-      return new Response(
-        JSON.stringify({ error: 'Too many requests. Please try again later.' }),
-        { 
-          status: 429,
-          headers: { 
-            ...corsHeaders,
-            'Content-Type': 'application/json',
-            'Retry-After': '60'
-          }
-        }
-      );
-    }
-
     // Validate OpenAI API key
     if (!openAIApiKey) {
       console.error('OpenAI API key is not configured');
