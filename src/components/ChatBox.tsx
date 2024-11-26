@@ -1,53 +1,29 @@
 import { useState } from "react";
 import { Button } from "./ui/button";
-import { Input } from "./ui/input";
 import { ScrollArea } from "./ui/scroll-area";
 import { Card } from "./ui/card";
-import { Send, X, MessageCircle, RefreshCw } from "lucide-react";
+import { MessageCircle, X, RefreshCw } from "lucide-react";
 import { useToast } from "./ui/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import Draggable from "react-draggable";
 import { useAuth } from "@/contexts/AuthContext";
-
-interface Message {
-  id: string;
-  content: string;
-  isUser: boolean;
-  timestamp: Date;
-}
-
-const INSURANCE_FACTS = [
-  "The first insurance company in the US was founded in Charleston, SC in 1735",
-  "Lloyd's of London started as a coffee house where merchants gathered to discuss shipping insurance",
-  "Benjamin Franklin helped establish America's first insurance company in 1752",
-  "The average cost of cyber insurance increased by 74% in 2021",
-  "The insurance industry employs over 2.8 million people in the United States",
-  "The first auto insurance policy was written in 1897",
-  "Insurance companies process over $1.2 trillion in claims annually",
-  "The term 'underwriter' originated from Lloyd's of London maritime insurance practice"
-];
-
-const getRandomFact = () => {
-  const randomIndex = Math.floor(Math.random() * INSURANCE_FACTS.length);
-  return INSURANCE_FACTS[randomIndex];
-};
-
-const INITIAL_MESSAGE: Message = {
-  id: "welcome",
-  content: getRandomFact(),
-  isUser: false,
-  timestamp: new Date(),
-};
+import { Message, getRandomFact } from "@/types/chat";
+import { ChatMessage } from "./chat/ChatMessage";
+import { ChatInput } from "./chat/ChatInput";
 
 export function ChatBox() {
-  const [messages, setMessages] = useState<Message[]>([INITIAL_MESSAGE]);
+  const [messages, setMessages] = useState<Message[]>([{
+    id: "welcome",
+    content: getRandomFact(),
+    isUser: false,
+    timestamp: new Date(),
+  }]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
   const { user } = useAuth();
 
-  // Don't render if user is not authenticated
   if (!user) {
     return null;
   }
@@ -113,6 +89,7 @@ export function ChatBox() {
       timestamp: new Date(),
     }]);
     setInput("");
+    setIsLoading(false); // Reset loading state to ensure input isn't disabled
     toast({
       title: "Chat Reset",
       description: "The chat has been reset with a new insurance fact.",
@@ -166,43 +143,17 @@ export function ChatBox() {
           <ScrollArea className="flex-1 p-4">
             <div className="space-y-4">
               {messages.map((message) => (
-                <div
-                  key={message.id}
-                  className={`flex ${
-                    message.isUser ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  <div
-                    className={`max-w-[80%] rounded-lg p-3 ${
-                      message.isUser
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-secondary text-secondary-foreground"
-                    }`}
-                  >
-                    <p className="text-sm">{message.content}</p>
-                    <span className="text-xs opacity-70">
-                      {message.timestamp.toLocaleTimeString()}
-                    </span>
-                  </div>
-                </div>
+                <ChatMessage key={message.id} message={message} />
               ))}
             </div>
           </ScrollArea>
 
-          <form onSubmit={handleSubmit} className="p-4 border-t">
-            <div className="flex gap-2">
-              <Input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask me anything about insurance..."
-                disabled={isLoading}
-                className="flex-1"
-              />
-              <Button type="submit" disabled={isLoading}>
-                <Send className="h-4 w-4" />
-              </Button>
-            </div>
-          </form>
+          <ChatInput
+            input={input}
+            isLoading={isLoading}
+            onInputChange={setInput}
+            onSubmit={handleSubmit}
+          />
         </Card>
       </div>
     </Draggable>
