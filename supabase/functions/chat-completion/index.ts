@@ -1,9 +1,38 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { corsHeaders } from "../_shared/cors.ts";
-import { RateLimiter } from "../_shared/rate-limiter.ts";
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
 
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
+
+// Simple in-memory store for rate limiting
+const rateLimits = new Map<string, { count: number; resetTime: number }>();
+
+const isRateLimited = (clientId: string): boolean => {
+  const now = Date.now();
+  const limit = rateLimits.get(clientId);
+  
+  // Reset if time window has passed
+  if (!limit || now > limit.resetTime) {
+    rateLimits.set(clientId, {
+      count: 1,
+      resetTime: now + 60000 // 1 minute window
+    });
+    return false;
+  }
+
+  // Check if over limit
+  if (limit.count >= 5) { // 5 requests per minute
+    return true;
+  }
+
+  // Increment counter
+  limit.count++;
+  return false;
+};
 
 serve(async (req) => {
   // Handle CORS preflight requests
@@ -12,16 +41,21 @@ serve(async (req) => {
   }
 
   try {
-    // Initialize rate limiter
-    const rateLimiter = new RateLimiter();
-    const isLimited = await rateLimiter.isRateLimited({
-      tokensPerInterval: 5, // 5 requests
-      interval: 60000, // per minute
-      uniqueTokenKey: req.headers.get('x-client-info') || 'anonymous'
-    });
-
-    if (isLimited) {
-      return RateLimiter.createRateLimitResponse();
+    const clientId = req.headers.get('x-client-info') || 'anonymous';
+    
+    // Check rate limit
+    if (isRateLimited(clientId)) {
+      return new Response(
+        JSON.stringify({ error: 'Too many requests. Please try again later.' }),
+        { 
+          status: 429,
+          headers: { 
+            ...corsHeaders,
+            'Content-Type': 'application/json',
+            'Retry-After': '60'
+          }
+        }
+      );
     }
 
     // Validate OpenAI API key
@@ -47,7 +81,7 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-4',
         messages: [
           {
             role: 'system',
