@@ -1,22 +1,29 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { corsHeaders } from "../_shared/cors.ts";
+import { RateLimiter } from "../_shared/rate-limiter.ts";
 
 const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
 serve(async (req) => {
-  console.log('Chat completion function started');
-  
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    console.log('Handling CORS preflight request');
-    return new Response(null, { 
-      headers: corsHeaders,
-      status: 204
-    });
+    return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    // Initialize rate limiter
+    const rateLimiter = new RateLimiter();
+    const isLimited = await rateLimiter.isRateLimited({
+      tokensPerInterval: 5, // 5 requests
+      interval: 60000, // per minute
+      uniqueTokenKey: req.headers.get('x-client-info') || 'anonymous'
+    });
+
+    if (isLimited) {
+      return RateLimiter.createRateLimitResponse();
+    }
+
     // Validate OpenAI API key
     if (!openAIApiKey) {
       console.error('OpenAI API key is not configured');
