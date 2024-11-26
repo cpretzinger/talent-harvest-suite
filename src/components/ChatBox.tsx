@@ -16,9 +16,25 @@ interface Message {
   timestamp: Date;
 }
 
+const INSURANCE_FACTS = [
+  "The first insurance company in the US was founded in Charleston, SC in 1735",
+  "Lloyd's of London started as a coffee house where merchants gathered to discuss shipping insurance",
+  "Benjamin Franklin helped establish America's first insurance company in 1752",
+  "The average cost of cyber insurance increased by 74% in 2021",
+  "The insurance industry employs over 2.8 million people in the United States",
+  "The first auto insurance policy was written in 1897",
+  "Insurance companies process over $1.2 trillion in claims annually",
+  "The term 'underwriter' originated from Lloyd's of London maritime insurance practice"
+];
+
+const getRandomFact = () => {
+  const randomIndex = Math.floor(Math.random() * INSURANCE_FACTS.length);
+  return INSURANCE_FACTS[randomIndex];
+};
+
 const INITIAL_MESSAGE: Message = {
   id: "welcome",
-  content: "Hey There! How can we help?",
+  content: getRandomFact(),
   isUser: false,
   timestamp: new Date(),
 };
@@ -90,10 +106,16 @@ export function ChatBox() {
   };
 
   const handleEndChat = () => {
-    setMessages([INITIAL_MESSAGE]);
+    setMessages([{
+      id: crypto.randomUUID(),
+      content: getRandomFact(),
+      isUser: false,
+      timestamp: new Date(),
+    }]);
+    setInput("");
     toast({
       title: "Chat Reset",
-      description: "The chat has been reset.",
+      description: "The chat has been reset with a new insurance fact.",
     });
   };
 
