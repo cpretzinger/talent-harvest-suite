@@ -44,13 +44,20 @@ export function ChatBox() {
     setIsLoading(true);
 
     try {
+      console.log('Sending chat request to Edge Function...');
+      
       const { data, error } = await supabase.functions.invoke("chat-completion", {
         body: { message: input },
+        headers: {
+          'Content-Type': 'application/json',
+        }
       });
+
+      console.log('Received response:', { data, error });
 
       if (error) {
         console.error('Supabase Edge Function error:', error);
-        if (error.message.includes('429')) {
+        if (error.message?.includes('429')) {
           throw new Error('Too many requests. Please wait a moment before trying again.');
         }
         throw error;
@@ -68,6 +75,7 @@ export function ChatBox() {
         timestamp: new Date(),
       };
 
+      console.log('Adding AI response to messages');
       setMessages((prev) => [...prev, aiMessage]);
     } catch (error: any) {
       console.error('Chat error:', error);

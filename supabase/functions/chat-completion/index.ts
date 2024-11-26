@@ -35,6 +35,8 @@ const isRateLimited = (clientId: string): boolean => {
 };
 
 serve(async (req) => {
+  console.log('Received request:', req.method);
+
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -42,9 +44,11 @@ serve(async (req) => {
 
   try {
     const clientId = req.headers.get('x-client-info') || 'anonymous';
+    console.log('Client ID:', clientId);
     
     // Check rate limit
     if (isRateLimited(clientId)) {
+      console.log('Rate limit exceeded for client:', clientId);
       return new Response(
         JSON.stringify({ error: 'Too many requests. Please try again later.' }),
         { 
@@ -66,13 +70,14 @@ serve(async (req) => {
 
     // Parse and validate request body
     const { message } = await req.json();
+    console.log('Received message:', message);
     
     if (!message) {
       console.error('No message provided in request');
       throw new Error('Message is required');
     }
 
-    console.log('Processing message:', message);
+    console.log('Making request to OpenAI...');
 
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -108,8 +113,11 @@ serve(async (req) => {
       throw new Error('Invalid response format from OpenAI');
     }
 
+    const result = { response: data.choices[0].message.content };
+    console.log('Sending response back to client');
+
     return new Response(
-      JSON.stringify({ response: data.choices[0].message.content }),
+      JSON.stringify(result),
       { 
         headers: { 
           ...corsHeaders,
