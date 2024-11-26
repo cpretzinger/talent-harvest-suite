@@ -44,12 +44,9 @@ export function ChatBox() {
     setIsLoading(true);
 
     try {
-      console.log('Sending chat request to Edge Function...');
       const { data, error } = await supabase.functions.invoke("chat-completion", {
         body: { message: input },
       });
-
-      console.log('Response from Edge Function:', { data, error });
 
       if (error) {
         console.error('Supabase Edge Function error:', error);
@@ -89,11 +86,7 @@ export function ChatBox() {
       timestamp: new Date(),
     }]);
     setInput("");
-    setIsLoading(false); // Reset loading state to ensure input isn't disabled
-    toast({
-      title: "Chat Reset",
-      description: "The chat has been reset with a new insurance fact.",
-    });
+    setIsLoading(false);
   };
 
   if (!isOpen) {
